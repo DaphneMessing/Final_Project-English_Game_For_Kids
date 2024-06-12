@@ -62,40 +62,45 @@ def main():
         st.session_state.next_sentence = False
 
     # Select TV show
-    show = st.selectbox("Select one of the following TV shows:", list(sentences.keys()))
-    st.session_state.show = show
-    sentence_list = sentences[show]
-
-    if st.session_state.index < len(sentence_list):
-        sentence = sentence_list[st.session_state.index]
-
-        # Display the sentence
-        st.write(f"Please read the sentence: {sentence}")
-
-        # Check if the "Start Recording" button was pressed
-        if st.session_state.start_button_pressed:
-            result = recognize_speech(sentence)
-            if result:
-                st.session_state.success = True
-                st.session_state.start_button_pressed = False
-                st.session_state.next_sentence = True
-                st.success("Great job! You read the sentence correctly.")
-            else:
-                st.error("Let's try again.")
-                st.session_state.start_button_pressed = False
-
-        # Show the "Start Recording" button or the "Continue" button
-        if st.session_state.next_sentence:
-            if st.button("Continue"):
-                st.session_state.next_sentence = False
-                st.session_state.index += 1
-                st.experimental_rerun()
-        else:
-            if st.button("Start Recording"):
-                st.session_state.start_button_pressed = True
-                st.experimental_rerun()
+    if st.session_state.show is None:
+        show = st.selectbox("Select one of the following TV shows:", ["Spongebob", "Cocomelon", "PJ Masks"])
+        if st.button("Confirm"):
+            st.session_state.show = show
+            st.experimental_rerun()
     else:
-        st.success("You've completed all the sentences for this show!")
+        show = st.session_state.show
+        sentence_list = sentences[show]
+
+        if st.session_state.index < len(sentence_list):
+            sentence = sentence_list[st.session_state.index]
+
+            # Display the sentence
+            st.write(f"Please read the sentence: {sentence}")
+
+            # Check if the "Start Recording" button was pressed
+            if st.session_state.start_button_pressed:
+                result = recognize_speech(sentence)
+                if result:
+                    st.session_state.success = True
+                    st.session_state.start_button_pressed = False
+                    st.session_state.next_sentence = True
+                    st.success("Great job! You read the sentence correctly.")
+                else:
+                    st.error("Let's try again.")
+                    st.session_state.start_button_pressed = False
+
+            # Show the "Start Recording" button or the "Continue" button
+            if st.session_state.next_sentence:
+                if st.button("Continue"):
+                    st.session_state.next_sentence = False
+                    st.session_state.index += 1
+                    st.experimental_rerun()
+            else:
+                if st.button("Start Recording"):
+                    st.session_state.start_button_pressed = True
+                    st.experimental_rerun()
+        else:
+            st.success("You've completed all the sentences for this show!")
 
 if __name__ == "__main__":
     main()
