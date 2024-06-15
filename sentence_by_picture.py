@@ -32,16 +32,12 @@ if 'correct' not in st.session_state:
 if 'shuffled_words' not in st.session_state:
     st.session_state.shuffled_words = []
 
-# Custom CSS to adjust button width based on word length
+# Custom CSS to center the buttons within their columns
 st.markdown("""
     <style>
-    div.stButton > button {
-        width: auto;
-        min-width: 50px;
-        max-width: 200px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+    .stButton > button {
+        display: block;
+        margin: auto;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -62,22 +58,28 @@ def display_image_and_sentence(image_path, sentence):
     # Display buttons for each word in the shuffled list
     remaining_words = [word for word in st.session_state.shuffled_words if word != '_']
     if remaining_words:
-        cols = st.columns(len(remaining_words))
-        for i, word in enumerate(remaining_words):
-            if cols[i].button(word):
-                index = st.session_state.selected_words.index('_')
-                st.session_state.selected_words[index] = word
-                st.session_state.shuffled_words[st.session_state.shuffled_words.index(word)] = '_'
-                st.experimental_rerun()
+        rows = (len(remaining_words) + 5) // 6  # Calculate number of rows needed
+        for i in range(rows):
+            cols = st.columns(6)
+            for j, word in enumerate(remaining_words[i*6:(i+1)*6]):
+                with cols[j]:
+                    if st.button(word, key=f"word_{i*6 + j}"):
+                        index = st.session_state.selected_words.index('_')
+                        st.session_state.selected_words[index] = word
+                        st.session_state.shuffled_words[st.session_state.shuffled_words.index(word)] = '_'
+                        st.experimental_rerun()
     
     # Display selected words as buttons to allow moving back to selectable options
     st.write("Selected words (click to move back):")
-    selected_cols = st.columns(len(st.session_state.selected_words))
-    for i, word in enumerate(st.session_state.selected_words):
-        if word != '_' and selected_cols[i].button(word):
-            st.session_state.shuffled_words[st.session_state.shuffled_words.index('_')] = word
-            st.session_state.selected_words[i] = '_'
-            st.experimental_rerun()
+    rows = (len(st.session_state.selected_words) + 5) // 6  # Calculate number of rows needed
+    for i in range(rows):
+        cols = st.columns(6)
+        for j, word in enumerate(st.session_state.selected_words[i*6:(i+1)*6]):
+            with cols[j]:
+                if word != '_' and st.button(word, key=f"selected_word_{i*6 + j}"):
+                    st.session_state.shuffled_words[st.session_state.shuffled_words.index('_')] = word
+                    st.session_state.selected_words[i*6 + j] = '_'
+                    st.experimental_rerun()
     
     # Display current selected words
     st.write("Current selection: " + " ".join([word for word in st.session_state.selected_words if word != '_']))
