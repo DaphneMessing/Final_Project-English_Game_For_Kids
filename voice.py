@@ -3,6 +3,7 @@ import streamlit as st
 import sounddevice as sd
 import numpy as np
 import scipy.io.wavfile as wav
+import os
 
 openai.api_key = 'sk-proj-5EFH4cZPnydPbqte06PQT3BlbkFJytQlGYnhClqkCuEmqjsI'
 
@@ -77,6 +78,13 @@ def main():
             # Display the sentence
             st.write(f"Please read the sentence: {sentence}")
 
+            # Display the corresponding image
+            image_path = f"{show}_img/voice{st.session_state.index + 1}.jpeg"
+            if os.path.exists(image_path):
+                st.image(image_path, caption=f"Sentence {st.session_state.index + 1}", width=550)
+            else:
+                st.warning("Image not found.")
+
             # Check if the "Start Recording" button was pressed
             if st.session_state.start_button_pressed:
                 result = recognize_speech(sentence)
@@ -101,6 +109,7 @@ def main():
                     st.experimental_rerun()
         else:
             st.success("You've completed all the sentences for this show!")
+            st.balloons()  # Show balloons to celebrate completion
 
 if __name__ == "__main__":
     main()
