@@ -79,7 +79,7 @@ def main():
             st.write(f"Please read the sentence: {sentence}")
 
             # Display the corresponding image
-            image_path = f"{show}_img/voice{st.session_state.index + 1}.jpeg"
+            image_path = f"{show}_VoiceImg/voice{st.session_state.index + 1}.jpeg"
             if os.path.exists(image_path):
                 st.image(image_path, caption=f"Sentence {st.session_state.index + 1}", width=550)
             else:
