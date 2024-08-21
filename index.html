@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Learning Game</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            display: block;
+        }
+
+        .tv-shows {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .tv-show {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .tv-show:hover {
+            background-color: #45a049;
+        }
+
+        /* Game Page Styles */
+        .game-container {
+            text-align: center;
+            display: none; /* Initially hidden */
+            position: relative;
+            width: 50%; /* Make the game container narrower */
+            height: 100vh;
+            margin: 0 auto; /* Center the game container */
+            background-size: cover;
+            background-position: center;
+        }
+
+        .road {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background-image: url('SpongeBob_HomePage/road.png');
+            background-repeat: no-repeat;
+            background-size: contain;
+            width: 30%; /* Match the container's width */
+            height: 100%; /* Full height of the container */
+        }
+
+        .level {
+            background-color: #90c5f3;
+            padding: 15px;
+            border-radius: 50%;
+            width: 25px; /* Smaller size for levels */
+            height: 25px; /* Smaller size for levels */
+            text-align: center;
+            cursor: pointer;
+            position: absolute;
+            transition: transform 0.3s;
+            transform: translate(-50%, -50%);
+            font-size: 18px; /* Increase the font size here */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .level:hover {
+            transform: scale(1.1);
+        }
+
+        /* Position Levels on the Road */
+        .level1 {
+            top: 93%; /* Lowest on the screen */
+            left: 55%;
+        }
+
+        .level2 {
+            top: 63%; /* Middle of the screen */
+            left: 52%;
+        }
+
+        .level3 {
+            top: 40%; /* Highest on the screen */
+            left: 40%;
+        }
+
+        .level4 {
+            top: 25%; /* Highest on the screen */
+            left: 60%;
+        }
+
+        .level5 {
+            top: 7%; /* Highest on the screen */
+            left: 45%;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- TV Show Selection Page -->
+    <div class="container" id="selection-page">
+        <h1>Select Your Favorite TV Show</h1>
+        <div class="tv-shows">
+            <div class="tv-show" onclick="selectTVShow('spongebob')">SpongeBob</div>
+            <div class="tv-show" onclick="selectTVShow('show2')">TV Show 2</div>
+            <div class="tv-show" onclick="selectTVShow('show3')">TV Show 3</div>
+        </div>
+    </div>
+
+    <!-- Game Page -->
+    <div class="game-container" id="game-page">
+        <div class="road"></div>
+        <div class="level level1">1</div>
+        <div class="level level2">2</div>
+        <div class="level level3">3</div>
+        <div class="level level4">4</div>
+        <div class="level level5">5</div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            // Clear any previous selection stored in localStorage
+            localStorage.removeItem('selectedTVShow');
+
+            // Show the TV Show Selection Page on load
+            document.getElementById('selection-page').style.display = 'block';
+        }
+
+        function selectTVShow(showName) {
+            // Save the selected TV show in localStorage
+            localStorage.setItem('selectedTVShow', showName);
+            
+            // Hide selection page and show game page
+            document.getElementById('selection-page').style.display = 'none';
+            const gamePage = document.getElementById('game-page');
+            gamePage.style.display = 'block';
+
+            // Apply the background image only to the game container
+            if (showName === 'spongebob') {
+                gamePage.style.backgroundImage = "url('SpongeBob_HomePage/background.png')";
+            }
+        }
+    </script>
+</body>
+</html>
