@@ -17,7 +17,7 @@ def get_prompt(gender, tv_show):
     else:
         character = "Flora from Winx"
     
-    return f"A photo of a {gender_str} in a full body costume of {character}, on a plain white background with no other elements"
+    return f"A full body photo of a {gender_str} dressed in a complete {character} costume, showing the entire body from head to toe, including the legs, on a plain white background with no other elements"
 
 # Function to remove the background using the Hugging Face Gradio model
 def remove_background(image_path):
