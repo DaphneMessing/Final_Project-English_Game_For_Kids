@@ -92,13 +92,13 @@
         }
 
         .level2 {
-            top: 63%; /* Middle of the screen */
-            left: 52%;
+            top: 67%; /* Middle of the screen */
+            left: 50%;
         }
 
         .level3 {
-            top: 40%; /* Highest on the screen */
-            left: 40%;
+            top: 45%; /* Highest on the screen */
+            left: 37%;
         }
 
         .level4 {
@@ -111,6 +111,14 @@
             left: 45%;
         }
 
+        /* Player Figure */
+        .player {
+            position: absolute;
+            width: 50px; /* Adjust size as needed */
+            height: 50px;
+            transform: translate(-50%, -50%);
+            transition: top 1s, left 1s; /* Smooth movement */
+        }
     </style>
 </head>
 <body>
@@ -127,14 +135,54 @@
     <!-- Game Page -->
     <div class="game-container" id="game-page">
         <div class="road"></div>
-        <div class="level level1">1</div>
-        <div class="level level2">2</div>
-        <div class="level level3">3</div>
-        <div class="level level4">4</div>
-        <div class="level level5">5</div>
+        <div class="level level1" onclick="movePlayerTo(1)">1</div>
+        <div class="level level2" onclick="movePlayerTo(2)">2</div>
+        <div class="level level3" onclick="movePlayerTo(3)">3</div>
+        <div class="level level4" onclick="movePlayerTo(4)">4</div>
+        <div class="level level5" onclick="movePlayerTo(5)">5</div>
+        <img src="SpongeBob_HomePage/player.png" id="player" class="player" alt="Player" style="top: 93%; left: 55%;" />
     </div>
 
     <script>
+        const levelPositions = [
+            { top: '93%', left: '55%' }, // Level 1
+            { top: '67%', left: '50%' }, // Level 2
+            { top: '45%', left: '37%' }, // Level 3
+            { top: '25%', left: '60%' }, // Level 4
+            { top: '7%', left: '45%' }   // Level 5
+        ];
+
+        function movePlayerTo(targetLevel) {
+            const player = document.getElementById('player');
+            const targetIndex = targetLevel - 1; // 0-based index
+            let currentIndex = levelPositions.findIndex(pos => {
+                return player.style.top === pos.top && player.style.left === pos.left;
+            });
+
+            if (currentIndex === -1) {
+                // If the player's position does not match any level, assume it's at level 1
+                currentIndex = 0;
+            }
+
+            function moveToNextLevel() {
+                if (currentIndex === targetIndex) return; // Stop if already at target
+
+                if (currentIndex < targetIndex) {
+                    currentIndex++; // Move forward
+                } else {
+                    currentIndex--; // Move backward
+                }
+
+                // Update player position
+                player.style.top = levelPositions[currentIndex].top;
+                player.style.left = levelPositions[currentIndex].left;
+
+                setTimeout(moveToNextLevel, 1000); // Adjust time to control speed
+            }
+
+            moveToNextLevel();
+        }
+
         window.onload = function() {
             // Clear any previous selection stored in localStorage
             localStorage.removeItem('selectedTVShow');
