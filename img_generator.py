@@ -16,7 +16,7 @@ def get_prompt(gender, tv_show):
         character = "Flora from Winx"
     
     # Add "no background" to the prompt
-    return f"A photo of a {gender_str} dressed up as {character}, no background"
+    return f"A photo of a {gender_str} in a full body costume of {character}, on a plain white background with no other elements"
 
 # Streamlit UI
 st.markdown("<h1 style='font-size: 36px; text-align: center;'>Learn English With Your Favorite TV Show</h1>", unsafe_allow_html=True)
