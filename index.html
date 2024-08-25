@@ -59,7 +59,7 @@
             top: 0;
             left: 50%;
             transform: translateX(-50%);
-            background-image: url('SpongeBob_HomePage/road.png');
+            background-image: url('HomePage/road.png'); /* General road image */
             background-repeat: no-repeat;
             background-size: contain;
             width: 30%; /* Match the container's width */
@@ -127,15 +127,16 @@
     <div class="container" id="selection-page">
         <h1>Select Your Favorite TV Show</h1>
         <div class="tv-shows">
-            <div class="tv-show" onclick="selectTVShow('spongebob')">SpongeBob</div>
-            <div class="tv-show" onclick="selectTVShow('show2')">TV Show 2</div>
-            <div class="tv-show" onclick="selectTVShow('show3')">TV Show 3</div>
+            <div class="tv-show" onclick="selectTVShow('Spongebob')">SpongeBob</div>
+            <div class="tv-show" onclick="selectTVShow('Pj Masks')">PJ Masks</div>
+            <div class="tv-show" onclick="selectTVShow('Winx Club')">Winx Club</div>
+            <div class="tv-show" onclick="selectTVShow('Spidey And His Amazing Friends')">Spidey and His Amazing Friends</div>
         </div>
     </div>
 
     <!-- Game Page -->
     <div class="game-container" id="game-page">
-        <div class="road"></div>
+        <div class="road" id="road"></div>
         <div class="level level20" onclick="movePlayerTo(20)">20</div>
         <div class="level level19" onclick="movePlayerTo(19)">19</div>
         <div class="level level18" onclick="movePlayerTo(18)">18</div>
@@ -222,6 +223,10 @@
             gamePage.scrollTop = gamePage.scrollHeight;
         }
 
+        function capitalizeWords(str) {
+            return str.replace(/\b\w/g, char => char.toUpperCase());
+        }
+
         window.onload = function() {
             // Clear any previous selection stored in localStorage
             localStorage.removeItem('selectedTVShow');
@@ -231,18 +236,20 @@
         }
 
         function selectTVShow(showName) {
+            // Capitalize the TV show name correctly
+            const capitalizedShowName = capitalizeWords(showName.toLowerCase());
+
             // Save the selected TV show in localStorage
-            localStorage.setItem('selectedTVShow', showName);
+            localStorage.setItem('selectedTVShow', capitalizedShowName);
             
             // Hide selection page and show game page
             document.getElementById('selection-page').style.display = 'none';
             const gamePage = document.getElementById('game-page');
             gamePage.style.display = 'block';
 
-            // Apply the background image only to the game container
-            if (showName === 'spongebob') {
-                gamePage.style.backgroundImage = "url('SpongeBob_HomePage/background.png')";
-            }
+            // Update the background image based on the selected TV show
+            const backgroundImage = `HomePage/${capitalizedShowName}_background.png`;
+            gamePage.style.backgroundImage = `url('${backgroundImage}')`;
 
             // Scroll to the bottom of the game page
             setTimeout(scrollToBottom, 0);
