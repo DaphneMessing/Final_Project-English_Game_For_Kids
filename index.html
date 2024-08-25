@@ -84,6 +84,12 @@
             align-items: center;
         }
 
+        .level.disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            pointer-events: none; /* Prevent clicking */
+        }
+
         .level:hover {
             transform: scale(1.1);
         }
@@ -132,7 +138,9 @@
             height: 50px;
             transform: translate(-50%, -50%);
             transition: top 1s, left 1s; /* Smooth movement */
+            pointer-events: none; /* Make the player image invisible to clicks */
         }
+
     </style>
 </head>
 <body>
@@ -150,64 +158,64 @@
     <!-- Game Page -->
     <div class="game-container" id="game-page">
         <div class="road" id="road"></div>
-        <div class="level level20" onclick="movePlayerTo(20)">20
+        <div class="level level20" id="level20" onclick="movePlayerTo(20)">20
             <div class="stars" id="stars20"></div>
         </div>
-        <div class="level level19" onclick="movePlayerTo(19)">19
+        <div class="level level19" id="level19" onclick="movePlayerTo(19)">19
             <div class="stars" id="stars19"></div>
         </div>
-        <div class="level level18" onclick="movePlayerTo(18)">18
+        <div class="level level18" id="level18" onclick="movePlayerTo(18)">18
             <div class="stars" id="stars18"></div>
         </div>
-        <div class="level level17" onclick="movePlayerTo(17)">17
+        <div class="level level17" id="level17" onclick="movePlayerTo(17)">17
             <div class="stars" id="stars17"></div>
         </div>
-        <div class="level level16" onclick="movePlayerTo(16)">16
+        <div class="level level16" id="level16" onclick="movePlayerTo(16)">16
             <div class="stars" id="stars16"></div>
         </div>
-        <div class="level level15" onclick="movePlayerTo(15)">15
+        <div class="level level15" id="level15" onclick="movePlayerTo(15)">15
             <div class="stars" id="stars15"></div>
         </div>
-        <div class="level level14" onclick="movePlayerTo(14)">14
+        <div class="level level14" id="level14" onclick="movePlayerTo(14)">14
             <div class="stars" id="stars14"></div>
         </div>
-        <div class="level level13" onclick="movePlayerTo(13)">13
+        <div class="level level13" id="level13" onclick="movePlayerTo(13)">13
             <div class="stars" id="stars13"></div>
         </div>
-        <div class="level level12" onclick="movePlayerTo(12)">12
+        <div class="level level12" id="level12" onclick="movePlayerTo(12)">12
             <div class="stars" id="stars12"></div>
         </div>
-        <div class="level level11" onclick="movePlayerTo(11)">11
+        <div class="level level11" id="level11" onclick="movePlayerTo(11)">11
             <div class="stars" id="stars11"></div>
         </div>
-        <div class="level level10" onclick="movePlayerTo(10)">10
+        <div class="level level10" id="level10" onclick="movePlayerTo(10)">10
             <div class="stars" id="stars10"></div>
         </div>
-        <div class="level level9" onclick="movePlayerTo(9)">9
+        <div class="level level9" id="level9" onclick="movePlayerTo(9)">9
             <div class="stars" id="stars9"></div>
         </div>
-        <div class="level level8" onclick="movePlayerTo(8)">8
+        <div class="level level8" id="level8" onclick="movePlayerTo(8)">8
             <div class="stars" id="stars8"></div>
         </div>
-        <div class="level level7" onclick="movePlayerTo(7)">7
+        <div class="level level7" id="level7" onclick="movePlayerTo(7)">7
             <div class="stars" id="stars7"></div>
         </div>
-        <div class="level level6" onclick="movePlayerTo(6)">6
+        <div class="level level6" id="level6" onclick="movePlayerTo(6)">6
             <div class="stars" id="stars6"></div>
         </div>
-        <div class="level level5" onclick="movePlayerTo(5)">5
+        <div class="level level5" id="level5" onclick="movePlayerTo(5)">5
             <div class="stars" id="stars5"></div>
         </div>
-        <div class="level level4" onclick="movePlayerTo(4)">4
+        <div class="level level4" id="level4" onclick="movePlayerTo(4)">4
             <div class="stars" id="stars4"></div>
         </div>
-        <div class="level level3" onclick="movePlayerTo(3)">3
+        <div class="level level3" id="level3" onclick="movePlayerTo(3)">3
             <div class="stars" id="stars3"></div>
         </div>
-        <div class="level level2" onclick="movePlayerTo(2)">2
+        <div class="level level2" id="level2" onclick="movePlayerTo(2)">2
             <div class="stars" id="stars2"></div>
         </div>
-        <div class="level level1" onclick="movePlayerTo(1)">1
+        <div class="level level1" id="level1" onclick="movePlayerTo(1)">1
             <div class="stars" id="stars1"></div>
         </div>
         <img src="user_img/generated_image_no_bg.png" id="player" class="player" alt="Player" style="top: 393%; left: 51%;" />
@@ -240,6 +248,8 @@
             { top: '8%', left: '50%' }  // Level 20
         ];
 
+        const levelScores = Array(20).fill(0); // Array to track scores for all levels
+
         const colors = {
             'Spongebob': ['light blue'],
             'Pj Masks': ['green', 'blue', 'red'],
@@ -260,6 +270,7 @@
         function updateStars(level, score) {
             const starsContainer = document.getElementById(`stars${level}`);
             starsContainer.innerHTML = ''; // Clear existing stars
+            levelScores[level - 1] = score; // Update the score in the array
 
             for (let i = 1; i <= 3; i++) {
                 const star = document.createElement('i');
@@ -272,6 +283,21 @@
 
                 starsContainer.appendChild(star);
             }
+
+            checkLevelAccessibility(); // Check and update level accessibility
+        }
+
+        function checkLevelAccessibility() {
+            for (let i = 2; i <= 20; i++) {
+                const currentLevel = document.getElementById(`level${i}`);
+                const previousLevelScore = levelScores[i - 2]; // Check score of previous level
+
+                if (previousLevelScore === 0) {
+                    currentLevel.classList.add('disabled');
+                } else {
+                    currentLevel.classList.remove('disabled');
+                }
+            }
         }
 
         window.onload = function() {
@@ -281,13 +307,20 @@
             // Show the TV Show Selection Page on load
             document.getElementById('selection-page').style.display = 'block';
 
-            // Initialize all levels with grey stars (0 stars)
+            // Initialize all levels with grey stars (0 stars initially)
             for (let i = 1; i <= 20; i++) {
-                updateStars(i, 0); // 0 stars initially
+                updateStars(i, 0); // Default to 0 stars
             }
+
+            updateStars(1,2);
+
         }
 
         function movePlayerTo(targetLevel) {
+            if (levelScores[targetLevel - 2] === 0 && targetLevel !== 1) {
+                return; // Prevent moving to the level if the previous level has 0 stars
+            }
+
             const player = document.getElementById('player');
             const targetIndex = targetLevel - 1; // 0-based index
             let currentIndex = levelPositions.findIndex(pos => {
