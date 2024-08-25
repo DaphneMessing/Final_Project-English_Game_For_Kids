@@ -14,6 +14,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            overflow: hidden; /* Prevent body scroll */
         }
 
         .container {
@@ -46,10 +47,11 @@
             display: none; /* Initially hidden */
             position: relative;
             width: 50%; /* Make the game container narrower */
-            height: 100vh;
+            height: 100vh; /* Full height of the viewport */
             margin: 0 auto; /* Center the game container */
             background-size: cover;
             background-position: center;
+            overflow-y: scroll; /* Make it scrollable */
         }
 
         .road {
@@ -61,7 +63,7 @@
             background-repeat: no-repeat;
             background-size: contain;
             width: 30%; /* Match the container's width */
-            height: 100%; /* Full height of the container */
+            height: 410vh; /* Height for 20 levels, 5 levels per viewport */
         }
 
         .level {
@@ -85,31 +87,30 @@
             transform: scale(1.1);
         }
 
-        /* Position Levels on the Road */
-        .level1 {
-            top: 93%; /* Lowest on the screen */
-            left: 55%;
-        }
+        /* Position Levels on the Road (Start from the bottom) */
+        .level1 { top: 393%; left: 51%; }
+        .level2 { top: 365%; left: 35%; }
+        .level3 { top: 350%; left: 56%; }
+        .level4 { top: 336%; left: 42%; }
+        .level5 { top: 316%; left: 53%; }
 
-        .level2 {
-            top: 67%; /* Middle of the screen */
-            left: 50%;
-        }
+        .level6 { top: 288%; left: 38%; }
+        .level7 { top: 268%; left: 57%; }
+        .level8 { top: 253%; left: 43%; }
+        .level9 { top: 233%; left: 60%; }
+        .level10 { top: 203%; left: 38%; }
 
-        .level3 {
-            top: 45%; /* Highest on the screen */
-            left: 37%;
-        }
+        .level11 { top: 185%; left: 60%; }
+        .level12 { top: 172%; left: 45%; }
+        .level13 { top: 145%; left: 60%; }
+        .level14 { top: 124%; left: 40%; }
+        .level15 { top: 105%; left: 60%; }
 
-        .level4 {
-            top: 25%; /* Highest on the screen */
-            left: 60%;
-        }
-
-        .level5 {
-            top: 7%; /* Highest on the screen */
-            left: 45%;
-        }
+        .level16 { top: 87%; left: 47%; }
+        .level17 { top: 65%; left: 56%; }
+        .level18 { top: 43%; left: 42%; }
+        .level19 { top: 23%; left: 61%; }
+        .level20 { top: 8%; left: 50%; }
 
         /* Player Figure */
         .player {
@@ -135,21 +136,54 @@
     <!-- Game Page -->
     <div class="game-container" id="game-page">
         <div class="road"></div>
-        <div class="level level1" onclick="movePlayerTo(1)">1</div>
-        <div class="level level2" onclick="movePlayerTo(2)">2</div>
-        <div class="level level3" onclick="movePlayerTo(3)">3</div>
-        <div class="level level4" onclick="movePlayerTo(4)">4</div>
+        <div class="level level20" onclick="movePlayerTo(20)">20</div>
+        <div class="level level19" onclick="movePlayerTo(19)">19</div>
+        <div class="level level18" onclick="movePlayerTo(18)">18</div>
+        <div class="level level17" onclick="movePlayerTo(17)">17</div>
+        <div class="level level16" onclick="movePlayerTo(16)">16</div>
+        <div class="level level15" onclick="movePlayerTo(15)">15</div>
+        <div class="level level14" onclick="movePlayerTo(14)">14</div>
+        <div class="level level13" onclick="movePlayerTo(13)">13</div>
+        <div class="level level12" onclick="movePlayerTo(12)">12</div>
+        <div class="level level11" onclick="movePlayerTo(11)">11</div>
+        <div class="level level10" onclick="movePlayerTo(10)">10</div>
+        <div class="level level9" onclick="movePlayerTo(9)">9</div>
+        <div class="level level8" onclick="movePlayerTo(8)">8</div>
+        <div class="level level7" onclick="movePlayerTo(7)">7</div>
+        <div class="level level6" onclick="movePlayerTo(6)">6</div>
         <div class="level level5" onclick="movePlayerTo(5)">5</div>
-        <img src="user_img/generated_image_no_bg.png" id="player" class="player" alt="Player" style="top: 93%; left: 55%;" />
+        <div class="level level4" onclick="movePlayerTo(4)">4</div>
+        <div class="level level3" onclick="movePlayerTo(3)">3</div>
+        <div class="level level2" onclick="movePlayerTo(2)">2</div>
+        <div class="level level1" onclick="movePlayerTo(1)">1</div>
+        <img src="user_img/generated_image_no_bg.png" id="player" class="player" alt="Player" style="top: 393%; left: 51%;" />
     </div>
 
     <script>
         const levelPositions = [
-            { top: '93%', left: '55%' }, // Level 1
-            { top: '67%', left: '50%' }, // Level 2
-            { top: '45%', left: '37%' }, // Level 3
-            { top: '25%', left: '60%' }, // Level 4
-            { top: '7%', left: '45%' }   // Level 5
+            { top: '393%', left: '51%' }, // Level 1
+            { top: '365%', left: '35%' }, // Level 2
+            { top: '350%', left: '56%' }, // Level 3
+            { top: '336%', left: '42%' }, // Level 4
+            { top: '316%', left: '53%' }, // Level 5
+
+            { top: '288%', left: '38%' }, // Level 6
+            { top: '268%', left: '57%' }, // Level 7
+            { top: '253%', left: '43%' }, // Level 8
+            { top: '233%', left: '60%' }, // Level 9
+            { top: '203%', left: '38%' }, // Level 10
+
+            { top: '185%', left: '60%' }, // Level 11
+            { top: '172%', left: '45%' }, // Level 12
+            { top: '145%', left: '60%' }, // Level 13
+            { top: '124%', left: '40%' }, // Level 14
+            { top: '105%', left: '60%' }, // Level 15
+
+            { top: '87%', left: '47%' }, // Level 16
+            { top: '65%', left: '56%' }, // Level 17
+            { top: '43%', left: '42%' }, // Level 18
+            { top: '23%', left: '61%' }, // Level 19
+            { top: '8%', left: '50%' }  // Level 20
         ];
 
         function movePlayerTo(targetLevel) {
@@ -183,6 +217,11 @@
             moveToNextLevel();
         }
 
+        function scrollToBottom() {
+            const gamePage = document.getElementById('game-page');
+            gamePage.scrollTop = gamePage.scrollHeight;
+        }
+
         window.onload = function() {
             // Clear any previous selection stored in localStorage
             localStorage.removeItem('selectedTVShow');
@@ -204,6 +243,9 @@
             if (showName === 'spongebob') {
                 gamePage.style.backgroundImage = "url('SpongeBob_HomePage/background.png')";
             }
+
+            // Scroll to the bottom of the game page
+            setTimeout(scrollToBottom, 0);
         }
     </script>
 </body>
