@@ -10,7 +10,7 @@ def generate_audio(sentence, filename):
     engine.save_to_file(sentence, filename)
     engine.runAndWait()
 
-# Function to get the sentence from the text file based on TV show and index
+# Function to get the sentence from the text file based on TV s how and index
 def get_sentence(tv_show, sentence_index):
     with open("listening_sen.txt", "r") as f:
         lines = f.readlines()
