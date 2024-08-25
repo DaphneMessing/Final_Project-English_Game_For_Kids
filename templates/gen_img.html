@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn English With Your Favorite TV Show</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        .upload-container, .options-container {
+            margin-bottom: 20px;
+        }
+        .options-container label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .options-container select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #loading {
+            display: none;
+            text-align: center;
+            margin: 20px;
+            font-size: 18px;
+        }
+        #ready {
+            display: none;
+            text-align: center;
+            margin: 20px;
+            font-size: 18px;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>Learn English With Your Favorite TV Show</h1>
+    <div class="container">
+        <div class="upload-container">
+            <label for="upload">Upload a close-up picture of your face</label>
+            <input type="file" id="upload" accept="image/*">
+        </div>
+
+        <div class="options-container">
+            <label for="gender">Select your gender</label>
+            <select id="gender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+
+            <label for="tvShow">Select a TV show</label>
+            <select id="tvShow">
+                <option value="Spidey and his Amazing Friends">Spidey and his Amazing Friends</option>
+                <option value="PJ Masks">PJ Masks</option>
+                <option value="Winx">Winx</option>
+                <option value="SpongeBob">SpongeBob</option>
+            </select>
+        </div>
+
+        <button onclick="generateImage()">Generate Image</button>
+
+        <div id="loading">Loading, please wait...</div>
+        <div id="ready">Ready to go!</div>
+    </div>
+
+    <script>
+        function generateImage() {
+            const uploadInput = document.getElementById('upload');
+            const gender = document.getElementById('gender').value;
+            const tvShow = document.getElementById('tvShow').value;
+            const loadingMessage = document.getElementById('loading');
+            const readyMessage = document.getElementById('ready');
+
+            if (!uploadInput.files.length) {
+                alert("Please upload an image.");
+                return;
+            }
+
+            // Show loading message and hide ready message
+            loadingMessage.style.display = 'block';
+            readyMessage.style.display = 'none';
+
+            const formData = new FormData();
+            formData.append("file", uploadInput.files[0]);
+            formData.append("gender", gender);
+            formData.append("tv_show", tvShow);
+
+            fetch('/generate', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Hide loading message
+                loadingMessage.style.display = 'none';
+
+                if (data.success) {
+                    // Show ready message
+                    readyMessage.style.display = 'block';
+                } else {
+                    alert(data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                loadingMessage.style.display = 'none';
+                alert('An error occurred while generating the image.');
+            });
+        }
+    </script>
+</body>
+</html>
