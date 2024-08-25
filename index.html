@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>English Learning Game</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* General Styles */
         body {
@@ -79,12 +80,24 @@
             transform: translate(-50%, -50%);
             font-size: 18px; /* Increase the font size here */
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
         }
 
         .level:hover {
             transform: scale(1.1);
+        }
+
+        .stars {
+            display: flex;
+            justify-content: center;
+            margin-top: 5px; /* Space between level number and stars */
+        }
+
+        .stars i {
+            font-size: 12px; /* Adjust star size */
+            margin: 0 1px; /* Space between stars */
+            color: grey; /* Default to grey */
         }
 
         /* Position Levels on the Road (Start from the bottom) */
@@ -137,26 +150,66 @@
     <!-- Game Page -->
     <div class="game-container" id="game-page">
         <div class="road" id="road"></div>
-        <div class="level level20" onclick="movePlayerTo(20)">20</div>
-        <div class="level level19" onclick="movePlayerTo(19)">19</div>
-        <div class="level level18" onclick="movePlayerTo(18)">18</div>
-        <div class="level level17" onclick="movePlayerTo(17)">17</div>
-        <div class="level level16" onclick="movePlayerTo(16)">16</div>
-        <div class="level level15" onclick="movePlayerTo(15)">15</div>
-        <div class="level level14" onclick="movePlayerTo(14)">14</div>
-        <div class="level level13" onclick="movePlayerTo(13)">13</div>
-        <div class="level level12" onclick="movePlayerTo(12)">12</div>
-        <div class="level level11" onclick="movePlayerTo(11)">11</div>
-        <div class="level level10" onclick="movePlayerTo(10)">10</div>
-        <div class="level level9" onclick="movePlayerTo(9)">9</div>
-        <div class="level level8" onclick="movePlayerTo(8)">8</div>
-        <div class="level level7" onclick="movePlayerTo(7)">7</div>
-        <div class="level level6" onclick="movePlayerTo(6)">6</div>
-        <div class="level level5" onclick="movePlayerTo(5)">5</div>
-        <div class="level level4" onclick="movePlayerTo(4)">4</div>
-        <div class="level level3" onclick="movePlayerTo(3)">3</div>
-        <div class="level level2" onclick="movePlayerTo(2)">2</div>
-        <div class="level level1" onclick="movePlayerTo(1)">1</div>
+        <div class="level level20" onclick="movePlayerTo(20)">20
+            <div class="stars" id="stars20"></div>
+        </div>
+        <div class="level level19" onclick="movePlayerTo(19)">19
+            <div class="stars" id="stars19"></div>
+        </div>
+        <div class="level level18" onclick="movePlayerTo(18)">18
+            <div class="stars" id="stars18"></div>
+        </div>
+        <div class="level level17" onclick="movePlayerTo(17)">17
+            <div class="stars" id="stars17"></div>
+        </div>
+        <div class="level level16" onclick="movePlayerTo(16)">16
+            <div class="stars" id="stars16"></div>
+        </div>
+        <div class="level level15" onclick="movePlayerTo(15)">15
+            <div class="stars" id="stars15"></div>
+        </div>
+        <div class="level level14" onclick="movePlayerTo(14)">14
+            <div class="stars" id="stars14"></div>
+        </div>
+        <div class="level level13" onclick="movePlayerTo(13)">13
+            <div class="stars" id="stars13"></div>
+        </div>
+        <div class="level level12" onclick="movePlayerTo(12)">12
+            <div class="stars" id="stars12"></div>
+        </div>
+        <div class="level level11" onclick="movePlayerTo(11)">11
+            <div class="stars" id="stars11"></div>
+        </div>
+        <div class="level level10" onclick="movePlayerTo(10)">10
+            <div class="stars" id="stars10"></div>
+        </div>
+        <div class="level level9" onclick="movePlayerTo(9)">9
+            <div class="stars" id="stars9"></div>
+        </div>
+        <div class="level level8" onclick="movePlayerTo(8)">8
+            <div class="stars" id="stars8"></div>
+        </div>
+        <div class="level level7" onclick="movePlayerTo(7)">7
+            <div class="stars" id="stars7"></div>
+        </div>
+        <div class="level level6" onclick="movePlayerTo(6)">6
+            <div class="stars" id="stars6"></div>
+        </div>
+        <div class="level level5" onclick="movePlayerTo(5)">5
+            <div class="stars" id="stars5"></div>
+        </div>
+        <div class="level level4" onclick="movePlayerTo(4)">4
+            <div class="stars" id="stars4"></div>
+        </div>
+        <div class="level level3" onclick="movePlayerTo(3)">3
+            <div class="stars" id="stars3"></div>
+        </div>
+        <div class="level level2" onclick="movePlayerTo(2)">2
+            <div class="stars" id="stars2"></div>
+        </div>
+        <div class="level level1" onclick="movePlayerTo(1)">1
+            <div class="stars" id="stars1"></div>
+        </div>
         <img src="user_img/generated_image_no_bg.png" id="player" class="player" alt="Player" style="top: 393%; left: 51%;" />
     </div>
 
@@ -202,7 +255,37 @@
                 const colorIndex = index % selectedColors.length;
                 level.style.backgroundColor = selectedColors[colorIndex];
             });
-        }        
+        }
+
+        function updateStars(level, score) {
+            const starsContainer = document.getElementById(`stars${level}`);
+            starsContainer.innerHTML = ''; // Clear existing stars
+
+            for (let i = 1; i <= 3; i++) {
+                const star = document.createElement('i');
+                star.className = 'fa fa-star'; // Add Font Awesome star icon class
+                star.style.color = 'grey'; // Default to grey
+
+                if (i <= score) {
+                    star.style.color = 'yellow'; // Change to yellow if score allows
+                }
+
+                starsContainer.appendChild(star);
+            }
+        }
+
+        window.onload = function() {
+            // Clear any previous selection stored in localStorage
+            localStorage.removeItem('selectedTVShow');
+
+            // Show the TV Show Selection Page on load
+            document.getElementById('selection-page').style.display = 'block';
+
+            // Initialize all levels with grey stars (0 stars)
+            for (let i = 1; i <= 20; i++) {
+                updateStars(i, 0); // 0 stars initially
+            }
+        }
 
         function movePlayerTo(targetLevel) {
             const player = document.getElementById('player');
@@ -242,14 +325,6 @@
 
         function capitalizeWords(str) {
             return str.replace(/\b\w/g, char => char.toUpperCase());
-        }
-
-        window.onload = function() {
-            // Clear any previous selection stored in localStorage
-            localStorage.removeItem('selectedTVShow');
-
-            // Show the TV Show Selection Page on load
-            document.getElementById('selection-page').style.display = 'block';
         }
 
         function selectTVShow(showName) {
