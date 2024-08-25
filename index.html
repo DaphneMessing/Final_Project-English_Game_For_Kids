@@ -128,7 +128,7 @@
         <h1>Select Your Favorite TV Show</h1>
         <div class="tv-shows">
             <div class="tv-show" onclick="selectTVShow('Spongebob')">SpongeBob</div>
-            <div class="tv-show" onclick="selectTVShow('Pj Masks')">PJ Masks</div>
+            <div class="tv-show" onclick="selectTVShow('PJ Masks')">PJ Masks</div>
             <div class="tv-show" onclick="selectTVShow('Winx Club')">Winx Club</div>
             <div class="tv-show" onclick="selectTVShow('Spidey And His Amazing Friends')">Spidey and His Amazing Friends</div>
         </div>
@@ -186,6 +186,23 @@
             { top: '23%', left: '61%' }, // Level 19
             { top: '8%', left: '50%' }  // Level 20
         ];
+
+        const colors = {
+            'Spongebob': ['light blue'],
+            'Pj Masks': ['green', 'blue', 'red'],
+            'Winx Club': ['purple'],
+            'Spidey And His Amazing Friends': ['red'],
+        };
+        
+        function applyLevelColors(showName) {
+            const selectedColors = colors[showName];
+            const levels = document.querySelectorAll('.level');
+            
+            levels.forEach((level, index) => {
+                const colorIndex = index % selectedColors.length;
+                level.style.backgroundColor = selectedColors[colorIndex];
+            });
+        }        
 
         function movePlayerTo(targetLevel) {
             const player = document.getElementById('player');
@@ -250,6 +267,9 @@
             // Update the background image based on the selected TV show
             const backgroundImage = `HomePage/${capitalizedShowName}_background.png`;
             gamePage.style.backgroundImage = `url('${backgroundImage}')`;
+
+            // Apply level colors based on the selected TV show
+            applyLevelColors(capitalizedShowName);
 
             // Scroll to the bottom of the game page
             setTimeout(scrollToBottom, 0);
