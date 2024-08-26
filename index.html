@@ -6,7 +6,6 @@
     <title>English Learning Game</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* General Styles */
         body {
             font-family: Arial, sans-serif;
             background-color: #f7f7f7;
@@ -15,44 +14,18 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            overflow: hidden; /* Prevent body scroll */
+            overflow: hidden;
         }
 
-        .container {
-            text-align: center;
-            display: block;
-        }
-
-        .tv-shows {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .tv-show {
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .tv-show:hover {
-            background-color: #45a049;
-        }
-
-        /* Game Page Styles */
         .game-container {
             text-align: center;
-            display: none; /* Initially hidden */
             position: relative;
-            width: 50%; /* Make the game container narrower */
-            height: 100vh; /* Full height of the viewport */
-            margin: 0 auto; /* Center the game container */
+            width: 50%;
+            height: 100vh;
+            margin: 0 auto;
             background-size: cover;
             background-position: center;
-            overflow-y: scroll; /* Make it scrollable */
+            overflow-y: scroll;
         }
 
         .road {
@@ -60,25 +33,25 @@
             top: 0;
             left: 50%;
             transform: translateX(-50%);
-            background-image: url('HomePage/road.png'); /* General road image */
+            background-image: url('HomePage/road.png');
             background-repeat: no-repeat;
             background-size: contain;
-            width: 30%; /* Match the container's width */
-            height: 410vh; /* Height for 20 levels, 5 levels per viewport */
+            width: 30%;
+            height: 410vh;
         }
 
         .level {
             background-color: #90c5f3;
             padding: 15px;
             border-radius: 50%;
-            width: 25px; /* Smaller size for levels */
-            height: 25px; /* Smaller size for levels */
+            width: 25px;
+            height: 25px;
             text-align: center;
             cursor: pointer;
             position: absolute;
             transition: transform 0.3s;
             transform: translate(-50%, -50%);
-            font-size: 18px; /* Increase the font size here */
+            font-size: 18px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -87,7 +60,7 @@
         .level.disabled {
             background-color: #ccc;
             cursor: not-allowed;
-            pointer-events: none; /* Prevent clicking */
+            pointer-events: none;
         }
 
         .level:hover {
@@ -97,16 +70,15 @@
         .stars {
             display: flex;
             justify-content: center;
-            margin-top: 5px; /* Space between level number and stars */
+            margin-top: 5px;
         }
 
         .stars i {
-            font-size: 12px; /* Adjust star size */
-            margin: 0 1px; /* Space between stars */
-            color: grey; /* Default to grey */
+            font-size: 12px;
+            margin: 0 1px;
+            color: grey;
         }
 
-        /* Position Levels on the Road (Start from the bottom) */
         .level1 { top: 393%; left: 51%; }
         .level2 { top: 365%; left: 35%; }
         .level3 { top: 350%; left: 56%; }
@@ -131,136 +103,125 @@
         .level19 { top: 23%; left: 61%; }
         .level20 { top: 8%; left: 50%; }
 
-        /* Player Figure */
         .player {
             position: absolute;
-            width: 50px; /* Adjust size as needed */
+            width: 50px;
             height: 50px;
             transform: translate(-50%, -50%);
-            transition: top 1s, left 1s; /* Smooth movement */
-            pointer-events: none; /* Make the player image invisible to clicks */
+            transition: top 1s, left 1s;
+            pointer-events: none;
         }
-
     </style>
 </head>
 <body>
-    <!-- TV Show Selection Page -->
-    <div class="container" id="selection-page">
-        <h1>Select Your Favorite TV Show</h1>
-        <div class="tv-shows">
-            <div class="tv-show" onclick="selectTVShow('Spongebob')">SpongeBob</div>
-            <div class="tv-show" onclick="selectTVShow('PJ Masks')">PJ Masks</div>
-            <div class="tv-show" onclick="selectTVShow('Winx Club')">Winx Club</div>
-            <div class="tv-show" onclick="selectTVShow('Spidey And His Amazing Friends')">Spidey and His Amazing Friends</div>
-        </div>
-    </div>
-
-    <!-- Game Page -->
     <div class="game-container" id="game-page">
         <div class="road" id="road"></div>
-        <div class="level level20" id="level20" onclick="movePlayerTo(20)">20
+        <div class="level level20" id="level20" onclick="submitLevel(20)">20
             <div class="stars" id="stars20"></div>
         </div>
-        <div class="level level19" id="level19" onclick="movePlayerTo(19)">19
+        <div class="level level19" id="level19" onclick="submitLevel(19)">19
             <div class="stars" id="stars19"></div>
         </div>
-        <div class="level level18" id="level18" onclick="movePlayerTo(18)">18
+        <div class="level level18" id="level18" onclick="submitLevel(18)">18
             <div class="stars" id="stars18"></div>
         </div>
-        <div class="level level17" id="level17" onclick="movePlayerTo(17)">17
+        <div class="level level17" id="level17" onclick="submitLevel(17)">17
             <div class="stars" id="stars17"></div>
         </div>
-        <div class="level level16" id="level16" onclick="movePlayerTo(16)">16
+        <div class="level level16" id="level16" onclick="submitLevel(16)">16
             <div class="stars" id="stars16"></div>
         </div>
-        <div class="level level15" id="level15" onclick="movePlayerTo(15)">15
+        <div class="level level15" id="level15" onclick="submitLevel(15)">15
             <div class="stars" id="stars15"></div>
         </div>
-        <div class="level level14" id="level14" onclick="movePlayerTo(14)">14
+        <div class="level level14" id="level14" onclick="submitLevel(14)">14
             <div class="stars" id="stars14"></div>
         </div>
-        <div class="level level13" id="level13" onclick="movePlayerTo(13)">13
+        <div class="level level13" id="level13" onclick="submitLevel(13)">13
             <div class="stars" id="stars13"></div>
         </div>
-        <div class="level level12" id="level12" onclick="movePlayerTo(12)">12
+        <div class="level level12" id="level12" onclick="submitLevel(12)">12
             <div class="stars" id="stars12"></div>
         </div>
-        <div class="level level11" id="level11" onclick="movePlayerTo(11)">11
+        <div class="level level11" id="level11" onclick="submitLevel(11)">11
             <div class="stars" id="stars11"></div>
         </div>
-        <div class="level level10" id="level10" onclick="movePlayerTo(10)">10
+        <div class="level level10" id="level10" onclick="submitLevel(10)">10
             <div class="stars" id="stars10"></div>
         </div>
-        <div class="level level9" id="level9" onclick="movePlayerTo(9)">9
+        <div class="level level9" id="level9" onclick="submitLevel(9)">9
             <div class="stars" id="stars9"></div>
         </div>
-        <div class="level level8" id="level8" onclick="movePlayerTo(8)">8
+        <div class="level level8" id="level8" onclick="submitLevel(8)">8
             <div class="stars" id="stars8"></div>
         </div>
-        <div class="level level7" id="level7" onclick="movePlayerTo(7)">7
+        <div class="level level7" id="level7" onclick="submitLevel(7)">7
             <div class="stars" id="stars7"></div>
         </div>
-        <div class="level level6" id="level6" onclick="movePlayerTo(6)">6
+        <div class="level level6" id="level6" onclick="submitLevel(6)">6
             <div class="stars" id="stars6"></div>
         </div>
-        <div class="level level5" id="level5" onclick="movePlayerTo(5)">5
+        <div class="level level5" id="level5" onclick="submitLevel(5)">5
             <div class="stars" id="stars5"></div>
         </div>
-        <div class="level level4" id="level4" onclick="movePlayerTo(4)">4
+        <div class="level level4" id="level4" onclick="submitLevel(4)">4
             <div class="stars" id="stars4"></div>
         </div>
-        <div class="level level3" id="level3" onclick="movePlayerTo(3)">3
+        <div class="level level3" id="level3" onclick="submitLevel(3)">3
             <div class="stars" id="stars3"></div>
         </div>
-        <div class="level level2" id="level2" onclick="movePlayerTo(2)">2
+        <div class="level level2" id="level2" onclick="submitLevel(2)">2
             <div class="stars" id="stars2"></div>
         </div>
-        <div class="level level1" id="level1" onclick="movePlayerTo(1)">1
+        <div class="level level1" id="level1" onclick="submitLevel(1)">1
             <div class="stars" id="stars1"></div>
         </div>
         <img src="user_img/generated_image_no_bg.png" id="player" class="player" alt="Player" style="top: 393%; left: 51%;" />
     </div>
 
     <script>
+        // Global variable to store the selected TV show
+        let selectedTVShow = localStorage.getItem('selectedTVShow');
+
         const levelPositions = [
-            { top: '393%', left: '51%' }, // Level 1
-            { top: '365%', left: '35%' }, // Level 2
-            { top: '350%', left: '56%' }, // Level 3
-            { top: '336%', left: '42%' }, // Level 4
-            { top: '316%', left: '53%' }, // Level 5
+            { top: '393%', left: '51%' },
+            { top: '365%', left: '35%' },
+            { top: '350%', left: '56%' },
+            { top: '336%', left: '42%' },
+            { top: '316%', left: '53%' },
 
-            { top: '288%', left: '38%' }, // Level 6
-            { top: '268%', left: '57%' }, // Level 7
-            { top: '253%', left: '43%' }, // Level 8
-            { top: '233%', left: '60%' }, // Level 9
-            { top: '203%', left: '38%' }, // Level 10
+            { top: '288%', left: '38%' },
+            { top: '268%', left: '57%' },
+            { top: '253%', left: '43%' },
+            { top: '233%', left: '60%' },
+            { top: '203%', left: '38%' },
 
-            { top: '185%', left: '60%' }, // Level 11
-            { top: '172%', left: '45%' }, // Level 12
-            { top: '145%', left: '60%' }, // Level 13
-            { top: '124%', left: '40%' }, // Level 14
-            { top: '105%', left: '60%' }, // Level 15
+            { top: '185%', left: '60%' },
+            { top: '172%', left: '45%' },
+            { top: '145%', left: '60%' },
+            { top: '124%', left: '40%' },
+            { top: '105%', left: '60%' },
 
-            { top: '87%', left: '47%' }, // Level 16
-            { top: '65%', left: '56%' }, // Level 17
-            { top: '43%', left: '42%' }, // Level 18
-            { top: '23%', left: '61%' }, // Level 19
-            { top: '8%', left: '50%' }  // Level 20
+            { top: '87%', left: '47%' },
+            { top: '65%', left: '56%' },
+            { top: '43%', left: '42%' },
+            { top: '23%', left: '61%' },
+            { top: '8%', left: '50%' }
         ];
 
-        const levelScores = Array(20).fill(0); // Array to track scores for all levels
+        const levelScores = Array(20).fill(0);
 
         const colors = {
             'Spongebob': ['light blue'],
-            'Pj Masks': ['green', 'blue', 'red'],
+            'PJ Masks': ['green', 'blue', 'red'],
             'Winx Club': ['purple'],
             'Spidey And His Amazing Friends': ['red'],
         };
-        
+
         function applyLevelColors(showName) {
             const selectedColors = colors[showName];
             const levels = document.querySelectorAll('.level');
-            
+
             levels.forEach((level, index) => {
                 const colorIndex = index % selectedColors.length;
                 level.style.backgroundColor = selectedColors[colorIndex];
@@ -269,28 +230,28 @@
 
         function updateStars(level, score) {
             const starsContainer = document.getElementById(`stars${level}`);
-            starsContainer.innerHTML = ''; // Clear existing stars
-            levelScores[level - 1] = score; // Update the score in the array
+            starsContainer.innerHTML = '';
+            levelScores[level - 1] = score;
 
             for (let i = 1; i <= 3; i++) {
                 const star = document.createElement('i');
-                star.className = 'fa fa-star'; // Add Font Awesome star icon class
-                star.style.color = 'grey'; // Default to grey
+                star.className = 'fa fa-star';
+                star.style.color = 'grey';
 
                 if (i <= score) {
-                    star.style.color = 'yellow'; // Change to yellow if score allows
+                    star.style.color = 'yellow';
                 }
 
                 starsContainer.appendChild(star);
             }
 
-            checkLevelAccessibility(); // Check and update level accessibility
+            checkLevelAccessibility();
         }
 
         function checkLevelAccessibility() {
             for (let i = 2; i <= 20; i++) {
                 const currentLevel = document.getElementById(`level${i}`);
-                const previousLevelScore = levelScores[i - 2]; // Check score of previous level
+                const previousLevelScore = levelScores[i - 2];
 
                 if (previousLevelScore === 0) {
                     currentLevel.classList.add('disabled');
@@ -301,86 +262,92 @@
         }
 
         window.onload = function() {
-            // Clear any previous selection stored in localStorage
-            localStorage.removeItem('selectedTVShow');
-
-            // Show the TV Show Selection Page on load
-            document.getElementById('selection-page').style.display = 'block';
-
-            // Initialize all levels with grey stars (0 stars initially)
+            // First, try to get the tv_show from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            let selectedTVShow = urlParams.get('tv_show');
+        
+            // If tv_show is not in the URL, try to get it from localStorage
+            if (!selectedTVShow) {
+                selectedTVShow = localStorage.getItem('selectedTVShow');
+            } else {
+                // If tv_show was found in the URL, update localStorage
+                localStorage.setItem('selectedTVShow', selectedTVShow);
+            }
+        
+            // If still no tv_show, redirect to selection page
+            if (!selectedTVShow) {
+                alert('Please select a TV show first!');
+                window.location.href = './SelectionPage.html';
+                return;
+            }
+        
+            // Now apply the selected TV show
+            const gamePage = document.getElementById('game-page');
+            gamePage.style.display = 'block';
+        
+            const backgroundImage = `HomePage/${selectedTVShow}_background.png`;
+            gamePage.style.backgroundImage = `url('${backgroundImage}')`;
+        
+            applyLevelColors(selectedTVShow);
+        
+            setTimeout(scrollToBottom, 0);
+        
             for (let i = 1; i <= 20; i++) {
-                updateStars(i, 0); // Default to 0 stars
+                updateStars(i, 0);
+            }
+        }        
+        
+
+        function submitLevel(level) {
+
+            if (!selectedTVShow) {
+                alert('Please select a TV show first!');
+                window.location.href = 'SelectionPage.html';
+                return;
             }
 
-            updateStars(1,2);
-
+            const url = `http://localhost:8000/sentences_pictures_game.html?tv_show=${encodeURIComponent(selectedTVShow)}&level=${level}`;
+            window.location.href = url;
         }
 
         function movePlayerTo(targetLevel) {
             if (levelScores[targetLevel - 2] === 0 && targetLevel !== 1) {
-                return; // Prevent moving to the level if the previous level has 0 stars
+                return;
             }
 
             const player = document.getElementById('player');
-            const targetIndex = targetLevel - 1; // 0-based index
+            const targetIndex = targetLevel - 1;
             let currentIndex = levelPositions.findIndex(pos => {
                 return player.style.top === pos.top && player.style.left === pos.left;
             });
 
             if (currentIndex === -1) {
-                // If the player's position does not match any level, assume it's at level 1
                 currentIndex = 0;
             }
 
             function moveToNextLevel() {
-                if (currentIndex === targetIndex) return; // Stop if already at target
+                if (currentIndex === targetIndex) return;
 
                 if (currentIndex < targetIndex) {
-                    currentIndex++; // Move forward
+                    currentIndex++;
                 } else {
-                    currentIndex--; // Move backward
+                    currentIndex--;
                 }
 
-                // Update player position
                 player.style.top = levelPositions[currentIndex].top;
                 player.style.left = levelPositions[currentIndex].left;
 
-                setTimeout(moveToNextLevel, 1000); // Adjust time to control speed
+                setTimeout(moveToNextLevel, 1000);
             }
 
             moveToNextLevel();
+
+            submitLevel(targetLevel);
         }
 
         function scrollToBottom() {
             const gamePage = document.getElementById('game-page');
             gamePage.scrollTop = gamePage.scrollHeight;
-        }
-
-        function capitalizeWords(str) {
-            return str.replace(/\b\w/g, char => char.toUpperCase());
-        }
-
-        function selectTVShow(showName) {
-            // Capitalize the TV show name correctly
-            const capitalizedShowName = capitalizeWords(showName.toLowerCase());
-
-            // Save the selected TV show in localStorage
-            localStorage.setItem('selectedTVShow', capitalizedShowName);
-            
-            // Hide selection page and show game page
-            document.getElementById('selection-page').style.display = 'none';
-            const gamePage = document.getElementById('game-page');
-            gamePage.style.display = 'block';
-
-            // Update the background image based on the selected TV show
-            const backgroundImage = `HomePage/${capitalizedShowName}_background.png`;
-            gamePage.style.backgroundImage = `url('${backgroundImage}')`;
-
-            // Apply level colors based on the selected TV show
-            applyLevelColors(capitalizedShowName);
-
-            // Scroll to the bottom of the game page
-            setTimeout(scrollToBottom, 0);
         }
     </script>
 </body>

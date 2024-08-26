@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select TV Show</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .tv-shows {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .tv-show {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .tv-show:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Select Your Favorite TV Show</h1>
+        <div class="tv-shows">
+            <div class="tv-show" onclick="selectTVShow('Spongebob')">SpongeBob</div>
+            <div class="tv-show" onclick="selectTVShow('PJ Masks')">PJ Masks</div>
+            <div class="tv-show" onclick="selectTVShow('Winx Club')">Winx Club</div>
+            <div class="tv-show" onclick="selectTVShow('Spidey And His Amazing Friends')">Spidey and His Amazing Friends</div>
+        </div>
+    </div>
+
+    <script>
+        function capitalizeWords(str) {
+            return str.replace(/\b\w/g, char => char.toUpperCase());
+        }
+
+        function selectTVShow(showName) {
+            const capitalizedShowName = capitalizeWords(showName);
+            localStorage.setItem('selectedTVShow', capitalizedShowName); // Save to localStorage
+            window.location.href = './index.html';  // Redirect to home page
+        }        
+        
+    </script>
+</body>
+</html>
