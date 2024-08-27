@@ -79,6 +79,18 @@
             color: grey;
         }
 
+        .total-score {
+            position: fixed; /* Position fixed to the viewport */
+            top: 10px; /* Keep it 10px from the top of the viewport */
+            left: 10px; /* Keep it 10px from the left of the viewport */
+            font-size: 20px;
+            color: #333;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 1000; /* Ensure it stays on top of other elements */
+        }               
+
         .level1 { top: 393%; left: 51%; }
         .level2 { top: 365%; left: 35%; }
         .level3 { top: 350%; left: 56%; }
@@ -115,6 +127,7 @@
 </head>
 <body>
     <div class="game-container" id="game-page">
+        <div class="total-score" id="totalScore">Total Score: 0</div> <!-- Total score display -->
         <div class="road" id="road"></div>
         <div class="level level20" id="level20" onclick="submitLevel(20)">20
             <div class="stars" id="stars20"></div>
@@ -247,9 +260,18 @@
 
             levelScores[level - 1] = score;
             checkLevelAccessibility();
+            updateTotalScore(); // Update total score whenever stars are updated
         }
 
-
+        function updateTotalScore() {
+            let totalScore = 0;
+            for (let i = 1; i <= 20; i++) {
+                const points = parseInt(localStorage.getItem(`level${i}_points`) || '0');
+                totalScore += points;
+            }
+            document.getElementById('totalScore').innerText = `Total Score: ${totalScore}`;
+        }
+        
         function checkLevelAccessibility() {
             for (let i = 2; i <= 20; i++) {
                 const currentLevel = document.getElementById(`level${i}`);
