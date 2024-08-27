@@ -299,16 +299,17 @@
         
 
         function submitLevel(level) {
-
             if (!selectedTVShow) {
                 alert('Please select a TV show first!');
                 window.location.href = 'SelectionPage.html';
                 return;
             }
-
-            const url = `http://localhost:8000/sentences_pictures_game.html?tv_show=${encodeURIComponent(selectedTVShow)}&level=${level}`;
+        
+            // Construct the URL to the correct level file
+            const url = `./level${level}/level${level}.html?tv_show=${encodeURIComponent(selectedTVShow)}`;
             window.location.href = url;
         }
+        
 
         function movePlayerTo(targetLevel) {
             if (levelScores[targetLevel - 2] === 0 && targetLevel !== 1) {
