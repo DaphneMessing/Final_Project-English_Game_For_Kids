@@ -57,12 +57,19 @@
             return str.replace(/\b\w/g, char => char.toUpperCase());
         }
 
+        function resetScores() {
+            for (let i = 1; i <= 20; i++) {
+                localStorage.removeItem(`level${i}_score`);
+                localStorage.removeItem(`level${i}_points`);
+            }
+        }
+
         function selectTVShow(showName) {
+            resetScores(); // Reset scores and stars when a new TV show is selected
             const capitalizedShowName = capitalizeWords(showName);
             localStorage.setItem('selectedTVShow', capitalizedShowName); // Save to localStorage
             window.location.href = './index.html';  // Redirect to home page
         }        
-        
     </script>
 </body>
 </html>

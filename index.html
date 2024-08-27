@@ -228,10 +228,10 @@
             });
         }
 
-        function updateStars(level, score) {
+        function updateStars(level) {
+            const score = localStorage.getItem(`level${level}_score`) || 0;
             const starsContainer = document.getElementById(`stars${level}`);
             starsContainer.innerHTML = '';
-            levelScores[level - 1] = score;
 
             for (let i = 1; i <= 3; i++) {
                 const star = document.createElement('i');
@@ -245,8 +245,10 @@
                 starsContainer.appendChild(star);
             }
 
+            levelScores[level - 1] = score;
             checkLevelAccessibility();
         }
+
 
         function checkLevelAccessibility() {
             for (let i = 2; i <= 20; i++) {
@@ -293,7 +295,7 @@
             setTimeout(scrollToBottom, 0);
         
             for (let i = 1; i <= 20; i++) {
-                updateStars(i, 0);
+                updateStars(i);
             }
         }        
         
