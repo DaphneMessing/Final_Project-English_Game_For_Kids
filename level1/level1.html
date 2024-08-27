@@ -113,24 +113,21 @@
         }
 
         .return-button {
-            background-color: #ff6f61;
-            color: white;
+            background-color: transparent;
             border: none;
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-size: 1rem;
+            color: red;
+            font-size: 2.2rem;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            margin-top: 20px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
+            position: absolute;
+            top: 130px;
+            left: 425px;
+            transition: transform 0.3s ease;
         }
-
+        
         .return-button:hover {
-            background-color: #e55d50;
-            transform: translateY(-2px);
+            transform: scale(1.1);
         }
+        
     </style>
 </head>
 <body>
@@ -215,6 +212,9 @@
             renderGame();
         };
 
+        let mistakes = 0;
+
+
         const renderGame = () => {
             const container = document.getElementById('game-container');
             container.innerHTML = '';
@@ -222,7 +222,7 @@
             // Add level heading
             const levelHeading = document.createElement('div');
             levelHeading.className = 'level-heading';
-            levelHeading.innerText = `Level 1 - ${selectedTvShow}`;
+            levelHeading.innerText = `Level 1`;
             container.appendChild(levelHeading);
 
             const img = document.createElement('img');
@@ -277,7 +277,7 @@
                         // Add a "Return to Home Page" button at the final step
                         const returnButton = document.createElement('button');
                         returnButton.className = 'return-button';
-                        returnButton.innerHTML = 'Return to Home Page';
+                        returnButton.innerHTML = '←'; // Or use an arrow image if preferred';
                         returnButton.onclick = returnToHomePage;
                         container.appendChild(returnButton);
                     }
@@ -287,7 +287,7 @@
 
             const returnButton = document.createElement('button');
             returnButton.className = 'return-button';
-            returnButton.innerHTML = 'Return to Home Page';
+            returnButton.innerHTML = '←'; // Or use an arrow image if preferred
             returnButton.onclick = returnToHomePage;
             container.appendChild(returnButton);
         };
