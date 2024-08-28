@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -117,12 +117,11 @@
         });
     </script>
 </body>
-</html>
+</html> -->
+
+
 
 <!-- 
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -248,4 +247,150 @@
         });
     </script>
 </body>
-</html> -->
+</html>  -->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listening Comprehension - Level 3</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            margin-top: 15px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Level 3 - Listening Comprehension</h1>
+        <audio id="audioPlayer" controls></audio>
+        <input type="text" id="userInput" placeholder="What did you hear?" style="width: 100%; margin-top: 10px; padding: 8px;">
+        <button id="submitButton">Submit</button>
+        <button id="startOverButton">Start Over</button>
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        let selectedTVShow = localStorage.getItem('selectedTVShow');
+        let sentenceIndex = parseInt(localStorage.getItem('sentenceIndex')) || 0;
+        let sentences = [];
+    
+        if (!selectedTVShow) {
+            alert('Please select a TV show first!');
+            window.location.href = '../SelectionPage.html'; // Redirect to selection page if no TV show is selected
+        }
+    
+        console.log("Selected TV Show:", selectedTVShow);
+        console.log("Initial Sentence Index:", sentenceIndex);
+    
+        console.log("Fetching listening_sen.txt...");
+        fetch('listening_sen.txt')
+            .then(response => {
+                console.log("Response status for listening_sen.txt:", response.status);
+                if (!response.ok) {
+                    throw new Error('Failed to load text file.');
+                }
+                return response.text();
+            })
+            .then(text => {
+                console.log("Text file loaded successfully.");
+                console.log("Raw Text Content:", text);
+    
+                // Make the filtering case-insensitive by converting both sides to lower case
+                sentences = text.split('\n').filter(line => line.trim().toLowerCase().startsWith(selectedTVShow.toLowerCase()));
+                console.log("Filtered Sentences:", sentences);
+    
+                if (sentences.length === 0) {
+                    document.getElementById('message').innerText = 'No sentences available for this show.';
+                } else {
+                    loadSentence();
+                }
+            })
+            .catch(error => {
+                document.getElementById('message').innerText = 'Error loading sentences: ' + error.message;
+                console.error("Error loading sentences:", error);
+            });
+    
+        function loadSentence() {
+            if (sentenceIndex >= sentences.length) {
+                document.getElementById('message').innerText = 'Congratulations! You\'ve completed all the sentences.';
+                return;
+            }
+    
+            const sentence = sentences[sentenceIndex].split(':')[1].trim();
+            const audioFile = `audio/${selectedTVShow}_${sentenceIndex}.mp3`;
+    
+            console.log("Loading audio file:", audioFile);
+            
+            fetch(audioFile)
+                .then(response => {
+                    console.log("Response status for audio file:", response.status);
+                    if (!response.ok) {
+                        throw new Error('Audio file not found.');
+                    }
+                    document.getElementById('audioPlayer').src = audioFile;
+                    document.getElementById('audioPlayer').play();
+                })
+                .catch(error => {
+                    document.getElementById('message').innerText = 'Error loading audio file: ' + error.message;
+                    console.error("Error loading audio file:", error);
+                });
+        }
+    
+        document.getElementById('submitButton').addEventListener('click', () => {
+            const userInput = document.getElementById('userInput').value.trim();
+            const correctSentence = sentences[sentenceIndex].split(':')[1].trim();
+    
+            if (userInput.toLowerCase() === correctSentence.toLowerCase()) {
+                document.getElementById('message').innerText = 'Correct! Moving to the next sentence.';
+                sentenceIndex++;
+                localStorage.setItem('sentenceIndex', sentenceIndex);
+                loadSentence();
+            } else {
+                document.getElementById('message').innerText = 'Incorrect, please try again.';
+            }
+        });
+    
+        document.getElementById('startOverButton').addEventListener('click', () => {
+            sentenceIndex = 0;
+            localStorage.setItem('sentenceIndex', sentenceIndex);
+            loadSentence();
+        });
+    </script>
+    
+    
+</body>
+</html>
