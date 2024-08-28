@@ -224,20 +224,25 @@
 
         const levelScores = Array(20).fill(0);
 
-        const colors = {
-            'Spongebob': ['light blue'],
-            'PJ Masks': ['green', 'blue', 'red'],
-            'Winx Club': ['purple'],
-            'Spidey And His Amazing Friends': ['red'],
-        };
-
         function applyLevelColors(showName) {
+            const colors = {
+                'Spongebob': ['#90c5f3'], // Light blue for Spongebob
+                'PJ Masks': ['green', 'blue', 'red'], // Green, blue, and red for PJ Masks
+                'Winx Club': ['purple'], // Purple for Winx Club
+                'Spidey And His Amazing Friends': ['red'], // Red for Spidey and Friends
+            };
+
             const selectedColors = colors[showName];
             const levels = document.querySelectorAll('.level');
 
             levels.forEach((level, index) => {
                 const colorIndex = index % selectedColors.length;
                 level.style.backgroundColor = selectedColors[colorIndex];
+
+                // Check if the level should be disabled
+                if (level.classList.contains('disabled')) {
+                    level.style.backgroundColor = '#ccc'; // Override with grey for disabled levels
+                }
             });
         }
 
@@ -283,6 +288,7 @@
                     currentLevel.classList.remove('disabled');
                 }
             }
+            applyLevelColors(selectedTVShow); // Reapply colors after checking accessibility
         }
 
         window.onload = function() {
