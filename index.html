@@ -232,14 +232,16 @@
         }
     
         function updateStarsFromUrl() {
-            const level2_score = getQueryParam('level2_score');
-            if (level2_score !== null) {
-                localStorage.setItem('level2_score', level2_score);
-            }
-    
-            const level2_points = getQueryParam('level2_points');
-            if (level2_points !== null) {
-                localStorage.setItem('level2_points', level2_points);
+            for (let level = 1; level <= 20; level++) {
+                const levelScore = getQueryParam(`level${level}_score`);
+                if (levelScore !== null) {
+                    localStorage.setItem(`level${level}_score`, levelScore);
+                }
+        
+                const levelPoints = getQueryParam(`level${level}_points`);
+                if (levelPoints !== null) {
+                    localStorage.setItem(`level${level}_points`, levelPoints);
+                }
             }
         }
 
@@ -249,22 +251,21 @@
                 window.location.href = 'SelectionPage.html';
                 return;
             }
-
+        
             localStorage.setItem('currentLevel', level.toString());
-
-            movePlayerTo(level).then(() => {        
-                if (level === 2) {
-                    // Directly navigate to the Streamlit app for Level 2
-                    const streamlitURL = `http://localhost:8501?tv_show=${encodeURIComponent(selectedTVShow)}`;
-                    console.log("Navigating to:", streamlitURL);  // Debugging output
-                    window.location.href = streamlitURL;
+        
+            movePlayerTo(level).then(() => {
+                if (level === 2 || level === 5) {
+                    const pageName = `Level_${level}`; // Correctly format the page name
+                    window.location.href = `http://localhost:8501/${pageName}?tv_show=${encodeURIComponent(selectedTVShow)}`; // Use correct URL format for direct navigation
                 } else {
                     const url = `http://localhost:8000/level${level}/level${level}.html?tv_show=${encodeURIComponent(selectedTVShow)}`;
-                    console.log("Navigating to:", url);  // Debugging output
+                    console.log("Navigating to:", url);
                     window.location.href = url;
                 }
             });
         }
+            
 
         function movePlayerTo(targetLevel) {
             return new Promise((resolve) => {
