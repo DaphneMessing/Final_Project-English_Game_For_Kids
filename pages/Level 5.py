@@ -7,33 +7,37 @@ from streamlit_javascript import st_javascript
 
 openai.api_key = 'sk-proj-SRGCSAzogrcsQIu2kwiZT3BlbkFJp02fsLG6iUdA7G5kEfKg'
 
-# Define sentences for each TV show
 sentences = {
     "Spongebob": [
-        "Spongebob lives in a pineapple under the sea."
+        "Squidward, Spongebob's neighbor, loves to play the clarinet.",
+        "Spongebob enjoys flipping Krabby Patties at the Krusty Krab.",
+        "Patrick often joins Spongebob on his jellyfishing adventures.",
+        "Spongebob and Sandy Cheeks often practice karate together.",
+        "Plankton constantly schemes to steal the Krabby Patty secret formula."
     ],
     "PJ Masks": [
-        "The PJ Masks are on their way.",
-        "Connor turns into Catboy.",
-        "Amaya turns into Owlette.",
-        "Greg turns into Gekko.",
-        "PJ Masks all shout hooray."
+        "Catboy uses his super speed to chase down the Night Ninja.",
+        "Owlette flies high above the city to spot trouble below.",
+        "Gekko uses his super strength to lift heavy objects effortlessly.",
+        "The PJ Masks use their Owl-Glider, Cat-Car, and Gekko-Mobile to fight crime.",
+        "Together, the PJ Masks foil Romeo's plans to take over the world."
     ],
     "Winx Club": [
-        "Bloom is the leader of the Winx Club.",
-        "Stella is the Fairy of the Shining Sun.",
-        "Flora is the Fairy of Nature.",
-        "Musa is the Fairy of Music.",
-        "Tecna is the Fairy of Technology."
+        "Bloom learns to control the Dragon Flame, her powerful magical ability.",
+        "The Winx Club often battles evil witches like Icy, Darcy, and Stormy.",
+        "Stella creates dazzling light shields to protect her friends in battle.",
+        "Tecna uses her technological gadgets to solve tricky problems.",
+        "Musa’s songs and melodies can enchant and calm fierce creatures."
     ],
     "Spidey And His Amazing Friends": [
-        "Spidey swings through the city to stop villains.",
-        "Gwen is known as Ghost-Spider.",
-        "Miles is Spidey's friend and partner.",
-        "Spidey works together with his friends.",
-        "They protect the city from danger."
+        "Spidey and his friends collaborate to outsmart the tricky Green Goblin.",
+        "Ghost-Spider uses her acrobatic skills to dodge enemy attacks.",
+        "Miles Morales, also known as Spin, has the power of invisibility.",
+        "Teamwork and friendship help Spidey’s team overcome the toughest villains.",
+        "They use their web shooters and quick reflexes to save the city."
     ]
 }
+
 
 # Function to recognize and verify speech using OpenAI Whisper API
 def recognize_speech(expected_sentence):

@@ -10,7 +10,11 @@ openai.api_key = 'sk-proj-SRGCSAzogrcsQIu2kwiZT3BlbkFJp02fsLG6iUdA7G5kEfKg'
 # Define sentences for each TV show
 sentences = {
     "Spongebob": [
-        "Spongebob lives in a pineapple under the sea."
+        "Spongebob lives in a pineapple under the sea.",
+        "Patrick is Spongebob's best friend.",
+        "Spongebob loves to catch jellyfish.",
+        "Gary is Spongebob's pet snail.",
+        "Sandy Cheeks is a squirrel."    
     ],
     "PJ Masks": [
         "The PJ Masks are on their way.",
