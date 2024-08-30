@@ -67,8 +67,9 @@
         function selectTVShow(showName) {
             resetScores(); // Reset scores and stars when a new TV show is selected
             const capitalizedShowName = capitalizeWords(showName);
-            localStorage.setItem('selectedTVShow', capitalizedShowName); // Save to localStorage
-            window.location.href = './index.html';  // Redirect to home page
+            localStorage.setItem('selectedTVShow', capitalizedShowName); // Save the selected TV show to localStorage
+            localStorage.removeItem(`currentLevel`);// Set the initial player position to level 1
+            window.location.href = 'http://localhost:8000/index.html';  // Redirect to home page
         }        
     </script>
 </body>

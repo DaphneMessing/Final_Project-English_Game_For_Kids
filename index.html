@@ -189,7 +189,7 @@
         <div class="level level1" id="level1" onclick="submitLevel(1)">1
             <div class="stars" id="stars1"></div>
         </div>
-        <img src="user_img/generated_image_no_bg.png" id="player" class="player" alt="Player" style="top: 393%; left: 51%;" />
+        <img src="user_img/generated_image_no_bg.png" id="player" class="player" alt="Player" />
     </div>
 
     <script>
@@ -224,6 +224,23 @@
 
         const levelScores = Array(20).fill(0);
 
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+    
+        function updateStarsFromUrl() {
+            const level2_score = getQueryParam('level2_score');
+            if (level2_score !== null) {
+                localStorage.setItem('level2_score', level2_score);
+            }
+    
+            const level2_points = getQueryParam('level2_points');
+            if (level2_points !== null) {
+                localStorage.setItem('level2_points', level2_points);
+            }
+        }
+    
         function applyLevelColors(showName) {
             const colors = {
                 'Spongebob': ['#90c5f3'], // Light blue for Spongebob
@@ -248,25 +265,27 @@
 
         function updateStars(level) {
             const score = localStorage.getItem(`level${level}_score`) || 0;
+        
             const starsContainer = document.getElementById(`stars${level}`);
             starsContainer.innerHTML = '';
-
+        
             for (let i = 1; i <= 3; i++) {
                 const star = document.createElement('i');
                 star.className = 'fa fa-star';
                 star.style.color = 'grey';
-
+        
                 if (i <= score) {
                     star.style.color = 'yellow';
                 }
-
+        
                 starsContainer.appendChild(star);
             }
-
+        
             levelScores[level - 1] = score;
             checkLevelAccessibility();
             updateTotalScore(); // Update total score whenever stars are updated
         }
+        
 
         function updateTotalScore() {
             let totalScore = 0;
@@ -276,6 +295,7 @@
             }
             document.getElementById('totalScore').innerText = `Total Score: ${totalScore}`;
         }
+        
         
         function checkLevelAccessibility() {
             for (let i = 2; i <= 20; i++) {
@@ -291,43 +311,47 @@
             applyLevelColors(selectedTVShow); // Reapply colors after checking accessibility
         }
 
-        window.onload = function() {
-            // First, try to get the tv_show from the URL
+        window.onload = function () {
+            updateStarsFromUrl();
             const urlParams = new URLSearchParams(window.location.search);
-            let selectedTVShow = urlParams.get('tv_show');
-        
-            // If tv_show is not in the URL, try to get it from localStorage
-            if (!selectedTVShow) {
-                selectedTVShow = localStorage.getItem('selectedTVShow');
-            } else {
-                // If tv_show was found in the URL, update localStorage
-                localStorage.setItem('selectedTVShow', selectedTVShow);
-            }
-        
-            // If still no tv_show, redirect to selection page
+            let selectedTVShow = urlParams.get('tv_show') || localStorage.getItem('selectedTVShow');
+            
             if (!selectedTVShow) {
                 alert('Please select a TV show first!');
                 window.location.href = './SelectionPage.html';
                 return;
             }
         
-            // Now apply the selected TV show
+            localStorage.setItem('selectedTVShow', selectedTVShow);
+            console.log('Selected TV Show:', selectedTVShow);
+        
             const gamePage = document.getElementById('game-page');
             gamePage.style.display = 'block';
-        
-            const backgroundImage = `HomePage/${selectedTVShow}_background.png`;
-            gamePage.style.backgroundImage = `url('${backgroundImage}')`;
+            gamePage.style.backgroundImage = `url('HomePage/${selectedTVShow}_background.png')`;
         
             applyLevelColors(selectedTVShow);
         
-            setTimeout(scrollToBottom, 0);
+            // Retrieve and initialize current level correctly
+            let lastLevel = parseInt(localStorage.getItem('currentLevel')); // Always parse as an integer
+            console.log('Retrieved current level from localStorage:', lastLevel);
+        
+            if (isNaN(lastLevel) || lastLevel < 1) {
+                lastLevel = 1; // Default to level 1
+                localStorage.setItem('currentLevel', lastLevel.toString()); // Store as a string for consistency
+                console.log('Invalid level found, setting to default level 1');
+            }
+        
+            setPlayerPosition(lastLevel);
+            console.log('Player position set to level:', lastLevel);
         
             for (let i = 1; i <= 20; i++) {
                 updateStars(i);
             }
-        }        
         
-
+            setTimeout(scrollToBottom, 0);
+        };
+        
+        
         function submitLevel(level) {
             if (!selectedTVShow) {
                 alert('Please select a TV show first!');
@@ -335,46 +359,80 @@
                 return;
             }
         
-            // Construct the URL to the correct level file
-            const url = `./level${level}/level${level}.html?tv_show=${encodeURIComponent(selectedTVShow)}`;
-            window.location.href = url;
+            // Store current level in localStorage as a string to avoid data type conflicts
+            localStorage.setItem('currentLevel', level.toString());
+        
+            // Move player to the selected level first, then open the level
+            movePlayerTo(level).then(() => {        
+                if (level === 2) {
+                    window.location.href = `http://localhost:8501?tv_show=${encodeURIComponent(selectedTVShow)}`;
+                } else {
+                    const url = `http://localhost:8000/level${level}/level${level}.html?tv_show=${encodeURIComponent(selectedTVShow)}`;
+                    window.location.href = url;
+                }
+            });
         }
         
-
         function movePlayerTo(targetLevel) {
-            if (levelScores[targetLevel - 2] === 0 && targetLevel !== 1) {
-                return;
-            }
-
-            const player = document.getElementById('player');
-            const targetIndex = targetLevel - 1;
-            let currentIndex = levelPositions.findIndex(pos => {
-                return player.style.top === pos.top && player.style.left === pos.left;
-            });
-
-            if (currentIndex === -1) {
-                currentIndex = 0;
-            }
-
-            function moveToNextLevel() {
-                if (currentIndex === targetIndex) return;
-
-                if (currentIndex < targetIndex) {
-                    currentIndex++;
-                } else {
-                    currentIndex--;
+            return new Promise((resolve) => {
+                const player = document.getElementById('player');
+                const targetIndex = targetLevel - 1;
+        
+                // Find the current player position index
+                let currentIndex = levelPositions.findIndex(pos => {
+                    return player.style.top === pos.top && player.style.left === pos.left;
+                });
+        
+                if (currentIndex === -1) {
+                    currentIndex = 0; // Start from the first position if not found
                 }
-
-                player.style.top = levelPositions[currentIndex].top;
-                player.style.left = levelPositions[currentIndex].left;
-
-                setTimeout(moveToNextLevel, 1000);
-            }
-
-            moveToNextLevel();
-
-            submitLevel(targetLevel);
+        
+                // Function to move the player step-by-step
+                const interval = setInterval(() => {
+                    // Check if the player has reached the desired position
+                    if (currentIndex === targetIndex) {
+                        clearInterval(interval); // Stop the movement
+                        resolve(); // Resolve the Promise
+                        return;
+                    }
+        
+                    // Move towards the target index one step at a time
+                    currentIndex += (currentIndex < targetIndex) ? 1 : -1;
+        
+                    // Update the player's position to the next step
+                    player.style.top = levelPositions[currentIndex].top;
+                    player.style.left = levelPositions[currentIndex].left;
+                }, 500); // Move every 500 milliseconds
+            });
         }
+        
+        
+        function setPlayerPosition(level) {
+            const player = document.getElementById('player');
+            const levelIndex = level - 1;
+        
+            // Directly set the player's position to the last level's position
+            player.style.top = levelPositions[levelIndex].top;
+            player.style.left = levelPositions[levelIndex].left;
+        }
+        
+        
+        // Ensure the movePlayerTo function is properly bound to level click
+        document.querySelectorAll('.level').forEach(level => {
+            level.addEventListener('click', () => {
+                const levelNumber = parseInt(level.id.replace('level', ''));
+                submitLevel(levelNumber);
+            });
+        });
+        
+        
+         // Call update functions on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            for (let i = 1; i <= 20; i++) {
+                updateStars(i); // Update stars for each level
+            }
+            updateTotalScore(); // Update total score
+        });
 
         function scrollToBottom() {
             const gamePage = document.getElementById('game-page');

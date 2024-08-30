@@ -169,7 +169,7 @@
 
         if (!selectedTvShow) {
             alert('TV show is not selected! Returning to home page.');
-            window.location.href = '../index.html';
+            window.location.href = 'http://localhost:8000/index.html';
         }
 
         // Normalize the TV show name (e.g., convert to lowercase)
@@ -212,7 +212,7 @@
 
         if (!sentences.length) {
             alert(`TV show '${selectedTvShow}' not found.`);
-            window.location.href = '../index.html';
+            window.location.href = 'http://localhost:8000/index.html';
         }
 
         let shuffledWords = [];
@@ -374,7 +374,7 @@
         };
 
         const returnToHomePage = () => {
-            window.location.href = `../index.html?tv_show=${encodeURIComponent(selectedTvShow)}`;
+            window.location.href = `http://localhost:8000/index.html`;
         };
 
         // Initialize the game
