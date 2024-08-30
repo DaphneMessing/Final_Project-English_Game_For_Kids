@@ -95,13 +95,25 @@ def main():
             }
             .return-arrow {
                 position: absolute;
-                top: 10px;
-                left: 10px;
+                top: 10px;  /* Same positioning as Level 2 */
+                left: 10px;   /* Same positioning as Level 2 */
                 cursor: pointer;
             }
         </style>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         """, unsafe_allow_html=True
+    )
+
+    # Display "Return to Home Page" button as a red arrow in the upper part of the page
+    st.markdown(
+        """
+        <div class="return-arrow" style="position: absolute; top: 10px; left: 10px; cursor: pointer;">
+            <a href="http://localhost:8000/index.html" target="_self">
+                <i class="fas fa-arrow-left" style="color: red; font-size: 24px;"></i>
+            </a>
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
     st.markdown('<div class="container">', unsafe_allow_html=True)
@@ -203,22 +215,11 @@ def main():
                 else:
                     st.session_state.show_try_again_button = True  # Show Try Again button
                     message_placeholder.markdown('<div class="success-fail error-message">Incorrect! Try again.</div>', unsafe_allow_html=True)  # Display "Incorrect" message
-                    st.session_state.mistakes += 1
-                    # Do not clear the input here; it will clear when "Try Again" is pressed
+                    st.session_state.mistakes += 1  # Increment mistakes counter
                     st.experimental_rerun()
-
-        # Reset button to start over
-        if st.button("Start Over"):
-            st.session_state.sentence_index = 0
-            st.session_state.input_key += 1  # Change key to reset input box
-            st.session_state.mistakes = 0
-            st.session_state.show_continue_button = False  # Hide Continue button
-            st.session_state.show_try_again_button = False  # Hide Try Again button
-            st.experimental_rerun()
 
     else:
         if st.session_state.final_congratulations:
-            # Display final score and stars
             st.markdown('<div class="final-congratulations">Congratulations! You\'ve completed the level.</div>', unsafe_allow_html=True)
             points = st.session_state['level3_points']
             st.markdown(f'<div class="final-score">Your score: {points} points</div>', unsafe_allow_html=True)
@@ -242,18 +243,6 @@ def main():
                 st.write(f'<meta http-equiv="refresh" content="0; url={home_url}">', unsafe_allow_html=True)
         else:
             st.write("No more sentences available for this show.")
-    
-    # Display "Return to Home Page" button as a red arrow
-    st.markdown(
-        """
-        <div class="return-arrow" style="position: absolute; top: 10px; left: 10px; cursor: pointer;">
-            <a href="http://localhost:8000/index.html" target="_self">
-                <i class="fas fa-arrow-left" style="color: red; font-size: 24px;"></i>
-            </a>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
 
     st.markdown('</div>', unsafe_allow_html=True)
 
