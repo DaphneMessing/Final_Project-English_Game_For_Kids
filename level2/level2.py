@@ -176,7 +176,7 @@ def main():
         st.markdown(
             """
             <div class="return-arrow" style="position: absolute; top: -120px; left: 10px; cursor: pointer;">
-                <a href="http://localhost:8000/index.html">
+                <a href="http://localhost:8000/index.html" target="_self">
                     <i class="fas fa-arrow-left" style="color: red; font-size: 24px;"></i>
                 </a>
             </div>
