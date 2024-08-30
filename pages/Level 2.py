@@ -151,7 +151,7 @@ def main():
 
     # Check if the TV show is already selected and stored
     if "selected_tv_show" not in st.session_state:
-        st.session_state["selected_tv_show"] = "PJ Masks"  # Default to PJ Masks
+        st.session_state["selected_tv_show"] = "Spongebob"  # Default to PJ Masks
 
     # Get the selected TV show
     show = st.session_state["selected_tv_show"]
@@ -220,7 +220,7 @@ def main():
 
         # Display final score and stars
         st.session_state.final_congratulations = True
-        st.markdown('<div class="final-congratulations">Congratulations! You\'ve completed the level.</div>', unsafe_allow_html=True)
+        st.markdown('<div class="final-congratulations">Congratulations! You\'ve completed this level.</div>', unsafe_allow_html=True)
         points = st.session_state['level2_points']
         st.markdown(f'<div class="final-score">Your score: {points} points</div>', unsafe_allow_html=True)
 

@@ -225,7 +225,10 @@ def main():
                 st.experimental_rerun()  # Rerun to display the appropriate button and message
     else:
         if st.session_state.final_congratulations:
-            st.markdown('<div class="final-congratulations">Congratulations! You\'ve completed the level.</div>', unsafe_allow_html=True)
+            # Play the TV show's completion sound
+            sound_file = f"{show_no_spaces}_nextLevel.mp3"
+            play_audio(os.path.join(os.path.dirname(__file__), '..', sound_file))
+            st.markdown('<div class="final-congratulations">Congratulations! You\'ve completed this level.</div>', unsafe_allow_html=True)
             points = st.session_state['level3_points']
             st.markdown(f'<div class="final-score">Your score: {points} points</div>', unsafe_allow_html=True)
 
