@@ -1,6 +1,5 @@
 import streamlit as st
 import os
-import time
 import re
 
 # Function to get the sentence from the text file based on TV show and index
@@ -85,6 +84,14 @@ def main():
             }
             .success-fail {
                 text-align: center;
+                margin-top: 10px;
+                font-size: 1.2rem;
+            }
+            .success-message {
+                color: green;
+            }
+            .error-message {
+                color: red;
             }
             .return-arrow {
                 position: absolute;
@@ -115,7 +122,7 @@ def main():
     # Remove spaces from the TV show name for file path
     show_no_spaces = show.replace(" ", "")
 
-    # Initialize session state to keep track of the sentence index and user input
+    # Initialize session state to keep track of the sentence index, user input, mistakes, and button visibility
     if 'sentence_index' not in st.session_state:
         st.session_state.sentence_index = 0
     if 'input_key' not in st.session_state:
@@ -124,6 +131,10 @@ def main():
         st.session_state.mistakes = 0
     if 'final_congratulations' not in st.session_state:
         st.session_state.final_congratulations = False
+    if 'show_continue_button' not in st.session_state:
+        st.session_state.show_continue_button = False  # Controls visibility of Continue button
+    if 'show_try_again_button' not in st.session_state:
+        st.session_state.show_try_again_button = False  # Controls visibility of Try Again button
 
     # Get the current sentence from the file
     sentence = get_sentence(show, st.session_state.sentence_index)
@@ -142,40 +153,67 @@ def main():
         # Input box for the user's answer
         user_input = st.text_input(
             "What did you hear?",
+            value='' if st.session_state.show_try_again_button else '',
             key=f"user_input_box_{st.session_state.input_key}"  # Dynamic key for input box
         )
 
-        # Check the user's answer
-        if st.button("Submit"):
-            cleaned_user_input = clean_text(user_input)
-            cleaned_sentence = clean_text(sentence)
+        # Create placeholders for the messages and buttons to dynamically update
+        message_placeholder = st.empty()
+        button_placeholder = st.empty()
 
-            if cleaned_user_input == cleaned_sentence:
-                st.success("Correct! Moving to the next sentence.")
-                time.sleep(2)
-                st.session_state.sentence_index += 1
-                st.session_state.input_key += 1  # Change key to reset input box
+        # Display the "Submit", "Continue", or "Try Again" button based on the answer correctness
+        if st.session_state.show_continue_button:
+            # Show "Correct" message above "Continue" button
+            message_placeholder.markdown('<div class="success-fail success-message">Correct!</div>', unsafe_allow_html=True)
+            with button_placeholder:
+                if st.button("Continue", key="continue_button"):
+                    # Move to the next sentence
+                    st.session_state.sentence_index += 1
+                    st.session_state.input_key += 1  # Change key to reset input box
+                    st.session_state.show_continue_button = False  # Hide Continue button
 
-                # Check if there are more sentences (0-3 for each TV show)
-                if st.session_state.sentence_index > 3:
-                    calculate_and_store_score(st.session_state.mistakes)
-                    st.session_state.final_congratulations = True
-                    time.sleep(2)  # Pause before displaying the final message
-                    st.experimental_rerun()  # Rerun to display the final message
-                else:
+                    # Check if there are more sentences (0-3 for each TV show)
+                    if st.session_state.sentence_index > 3:
+                        calculate_and_store_score(st.session_state.mistakes)
+                        st.session_state.final_congratulations = True
+                        st.experimental_rerun()  # Rerun to display the final message
+                    else:
+                        st.experimental_rerun()
+
+        elif st.session_state.show_try_again_button:
+            # Show "Incorrect! Try again." message above "Try Again" button
+            message_placeholder.markdown('<div class="success-fail error-message">Incorrect! Try again.</div>', unsafe_allow_html=True)
+            with button_placeholder:
+                if st.button("Try Again", key="try_again_button"):
+                    # Clear the input and reset visibility for next attempt
+                    st.session_state.input_key += 1  # Change key to reset input box
+                    st.session_state.show_try_again_button = False  # Hide Try Again button
                     st.experimental_rerun()
-            else:
-                st.error("Incorrect, please try again.")
-                st.session_state.mistakes += 1
-                time.sleep(2)
-                st.session_state.input_key += 1  # Change key to reset input box
-                st.experimental_rerun()
+
+        else:
+            # Show "Submit" button for checking the answer
+            if button_placeholder.button("Submit", key="submit_button"):
+                cleaned_user_input = clean_text(user_input)
+                cleaned_sentence = clean_text(sentence)
+
+                if cleaned_user_input == cleaned_sentence:
+                    st.session_state.show_continue_button = True  # Show Continue button
+                    message_placeholder.markdown('<div class="success-fail success-message">Correct!</div>', unsafe_allow_html=True)  # Display "Correct" message
+                    st.experimental_rerun()  # Automatically rerun to hide Submit and show Continue
+                else:
+                    st.session_state.show_try_again_button = True  # Show Try Again button
+                    message_placeholder.markdown('<div class="success-fail error-message">Incorrect! Try again.</div>', unsafe_allow_html=True)  # Display "Incorrect" message
+                    st.session_state.mistakes += 1
+                    # Do not clear the input here; it will clear when "Try Again" is pressed
+                    st.experimental_rerun()
 
         # Reset button to start over
         if st.button("Start Over"):
             st.session_state.sentence_index = 0
             st.session_state.input_key += 1  # Change key to reset input box
             st.session_state.mistakes = 0
+            st.session_state.show_continue_button = False  # Hide Continue button
+            st.session_state.show_try_again_button = False  # Hide Try Again button
             st.experimental_rerun()
 
     else:
@@ -208,7 +246,7 @@ def main():
     # Display "Return to Home Page" button as a red arrow
     st.markdown(
         """
-        <div class="return-arrow" style="position: absolute; top: -120px; left: 10px; cursor: pointer;">
+        <div class="return-arrow" style="position: absolute; top: 10px; left: 10px; cursor: pointer;">
             <a href="http://localhost:8000/index.html" target="_self">
                 <i class="fas fa-arrow-left" style="color: red; font-size: 24px;"></i>
             </a>
