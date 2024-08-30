@@ -1,12 +1,11 @@
 import streamlit as st
 import os
 import re
+import base64
 
 # Function to get the sentence from the text file based on TV show and index
 def get_sentence(tv_show, sentence_index):
-    # Construct the correct relative path to the file from the pages folder to the root folder
     file_path = os.path.join(os.path.dirname(__file__), '..', 'listening_sen.txt')
-    
     with open(file_path, "r") as f:
         lines = f.readlines()
         sentences = [line.strip() for line in lines if line.startswith(tv_show)]
@@ -32,6 +31,18 @@ def calculate_and_store_score(mistakes):
     points = score * 100
     st.session_state['level3_score'] = score
     st.session_state['level3_points'] = points
+
+# Function to play audio using base64 encoding
+def play_audio(file_path):
+    audio_file = open(file_path, 'rb')
+    audio_bytes = audio_file.read()
+    audio_base64 = base64.b64encode(audio_bytes).decode()
+    audio_html = f'''
+        <audio autoplay>
+        <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
+        </audio>
+    '''
+    st.markdown(audio_html, unsafe_allow_html=True)
 
 def main():
     st.markdown(
@@ -95,8 +106,8 @@ def main():
             }
             .return-arrow {
                 position: absolute;
-                top: 10px;  /* Same positioning as Level 2 */
-                left: 10px;   /* Same positioning as Level 2 */
+                top: 10px;
+                left: 10px;
                 cursor: pointer;
             }
         </style>
@@ -177,13 +188,13 @@ def main():
         if st.session_state.show_continue_button:
             # Show "Correct" message above "Continue" button
             message_placeholder.markdown('<div class="success-fail success-message">Correct!</div>', unsafe_allow_html=True)
+            play_audio(os.path.join(os.path.dirname(__file__), '..', 'correctAnswer.mp3'))  # Play correct answer audio
             with button_placeholder:
                 if st.button("Continue", key="continue_button"):
                     # Move to the next sentence
                     st.session_state.sentence_index += 1
                     st.session_state.input_key += 1  # Change key to reset input box
                     st.session_state.show_continue_button = False  # Hide Continue button
-
                     # Check if there are more sentences (0-3 for each TV show)
                     if st.session_state.sentence_index > 3:
                         calculate_and_store_score(st.session_state.mistakes)
@@ -191,33 +202,27 @@ def main():
                         st.experimental_rerun()  # Rerun to display the final message
                     else:
                         st.experimental_rerun()
-
         elif st.session_state.show_try_again_button:
             # Show "Incorrect! Try again." message above "Try Again" button
             message_placeholder.markdown('<div class="success-fail error-message">Incorrect! Try again.</div>', unsafe_allow_html=True)
+            play_audio(os.path.join(os.path.dirname(__file__), '..', 'wrongAnswer.mp3'))  # Play wrong answer audio
             with button_placeholder:
                 if st.button("Try Again", key="try_again_button"):
                     # Clear the input and reset visibility for next attempt
                     st.session_state.input_key += 1  # Change key to reset input box
                     st.session_state.show_try_again_button = False  # Hide Try Again button
                     st.experimental_rerun()
-
         else:
             # Show "Submit" button for checking the answer
             if button_placeholder.button("Submit", key="submit_button"):
                 cleaned_user_input = clean_text(user_input)
                 cleaned_sentence = clean_text(sentence)
-
                 if cleaned_user_input == cleaned_sentence:
-                    st.session_state.show_continue_button = True  # Show Continue button
-                    message_placeholder.markdown('<div class="success-fail success-message">Correct!</div>', unsafe_allow_html=True)  # Display "Correct" message
-                    st.experimental_rerun()  # Automatically rerun to hide Submit and show Continue
+                    st.session_state.show_continue_button = True  # Show Continue button if correct
                 else:
-                    st.session_state.show_try_again_button = True  # Show Try Again button
-                    message_placeholder.markdown('<div class="success-fail error-message">Incorrect! Try again.</div>', unsafe_allow_html=True)  # Display "Incorrect" message
+                    st.session_state.show_try_again_button = True  # Show Try Again button if incorrect
                     st.session_state.mistakes += 1  # Increment mistakes counter
-                    st.experimental_rerun()
-
+                st.experimental_rerun()  # Rerun to display the appropriate button and message
     else:
         if st.session_state.final_congratulations:
             st.markdown('<div class="final-congratulations">Congratulations! You\'ve completed the level.</div>', unsafe_allow_html=True)
@@ -237,13 +242,11 @@ def main():
                 st.session_state.input_key += 1  # Change key to reset input box
                 st.session_state.mistakes = 0
                 st.session_state.final_congratulations = False
-                
                 # Append score and points to the URL
                 home_url = f"http://localhost:8000/index.html?level3_score={st.session_state['level3_score']}&level3_points={st.session_state['level3_points']}"
                 st.write(f'<meta http-equiv="refresh" content="0; url={home_url}">', unsafe_allow_html=True)
         else:
             st.write("No more sentences available for this show.")
-
     st.markdown('</div>', unsafe_allow_html=True)
 
 if __name__ == "__main__":
