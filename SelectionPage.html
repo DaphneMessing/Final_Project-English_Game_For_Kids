@@ -69,7 +69,7 @@
             const capitalizedShowName = capitalizeWords(showName);
             localStorage.setItem('selectedTVShow', capitalizedShowName); // Save the selected TV show to localStorage
             localStorage.removeItem(`currentLevel`);// Set the initial player position to level 1
-            window.location.href = 'http://localhost:8000/index.html';  // Redirect to home page
+            window.location.href = `http://localhost:8501/?tv_show=${encodeURIComponent(capitalizedShowName)}`;  // Redirect to Streamlit app
         }        
     </script>
 </body>
