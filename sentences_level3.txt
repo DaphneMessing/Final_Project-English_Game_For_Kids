@@ -1,8 +1,7 @@
-
-SpongeBob: spongebob likes jellyfish
-SpongeBob: patrick lives under a rock
-SpongeBob: spongebob is making krabby patties
-SpongeBob: spongebob and sandy are having a karate match
+Spongebob: spongebob likes jellyfish
+Spongebob: patrick lives under a rock
+Spongebob: spongebob is making krabby patties
+Spongebob: spongebob and sandy are having a karate match
 
 PJ Masks: catboy can run really fast
 PJ Masks: owlette is flying in the sky
