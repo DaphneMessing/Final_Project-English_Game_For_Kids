@@ -191,7 +191,7 @@
             <div class="stars" id="stars20"></div>
         </div>
         <!-- Player image -->
-        <img src="user_img/generated_image_no_bg.png" id="player" class="player" alt="Player" />
+        <img id="player" class="player" alt="Player" />
 
     </div>
 
@@ -407,6 +407,11 @@
             }
         
             setTimeout(scrollToBottom, 0);
+
+            // Dynamically construct the image path
+            const playerImageElement = document.getElementById('player');
+            const playerImagePath = 'user_img/generated_image_no_bg.png';
+            playerImageElement.src = playerImagePath + '?' + new Date().getTime(); // Prevent caching by adding a timestamp
         };
 
         function scrollToBottom() {
