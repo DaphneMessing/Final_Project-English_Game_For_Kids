@@ -3,6 +3,7 @@ import streamlit as st
 import sounddevice as sd
 import numpy as np
 import scipy.io.wavfile as wav
+import re
 from streamlit_javascript import st_javascript
 
 openai.api_key = 'sk-proj-SRGCSAzogrcsQIu2kwiZT3BlbkFJp02fsLG6iUdA7G5kEfKg'
@@ -38,6 +39,10 @@ sentences = {
     ]
 }
 
+# Function to clean text by removing punctuation and converting to lowercase
+def clean_text(text):
+    # Remove punctuation and convert to lowercase
+    return re.sub(r'[^\w\s]', '', text).lower()
 
 # Function to recognize and verify speech using OpenAI Whisper API
 def recognize_speech(expected_sentence):
@@ -62,7 +67,7 @@ def recognize_speech(expected_sentence):
     transcription = result['text']
     recording_placeholder.empty()  # Clears the "Recording..." message
     st.markdown(f'<div style="text-align: center;"><p>You said: {transcription}</p></div>', unsafe_allow_html=True)
-    return transcription.strip().lower() == expected_sentence.strip().lower()
+    return clean_text(transcription) == clean_text(expected_sentence)
 
 # Function to calculate score based on mistakes
 def calculate_and_store_score(mistakes):
