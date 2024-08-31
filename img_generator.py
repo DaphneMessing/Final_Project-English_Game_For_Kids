@@ -3,6 +3,7 @@ from gradio_client import Client, handle_file
 from PIL import Image
 import os
 import glob
+import shutil
 
 # Function to get the prompt based on user inputs
 def get_prompt(gender, tv_show):
@@ -36,6 +37,39 @@ def clear_directory(directory):
     for f in files:
         os.remove(f)
 
+def handle_skip(tv_show):
+    # Map default images for each TV show
+    default_images = {
+        "Spidey And His Amazing Friends": "default_player_img/default_spidey.png",
+        "PJ Masks": "default_player_img/default_pj_masks.png",
+        "Spongebob": "default_player_img/default_spongebob.png",
+        "Winx Club": "default_player_img/default_winx_club.png"
+    }
+
+    # Get the path to the default image for the selected TV show
+    selected_image = default_images.get(tv_show, None)
+
+    if selected_image:
+        # Define the destination path in the user_img directory
+        destination_path = os.path.join("user_img", "generated_image_no_bg.png")
+        
+        # Copy the default image to the user_img directory with the correct name
+        try:
+            shutil.copy(selected_image, destination_path)
+
+            # Update session state to indicate that the image is generated
+            st.session_state['image_generated'] = True
+            st.session_state['selected_image_path'] = destination_path
+
+            # Update session state for skipping
+            st.session_state['skip_image_generation'] = True
+
+            # Force rerun to handle the skip logic
+            st.experimental_rerun()
+        except Exception as e:
+            st.error(f"Error copying default image: {e}")  # Display error message
+
+
 # Get selected TV show from URL query parameters
 query_params = st.query_params
 tv_show = query_params.get('tv_show', [None])
@@ -54,6 +88,12 @@ else:
         st.session_state['button_clicked'] = False
     if 'error_occurred' not in st.session_state:
         st.session_state['error_occurred'] = False
+    if 'skip_image_generation' not in st.session_state:
+        st.session_state['skip_image_generation'] = False
+
+    # Handle the skip state by redirecting to the home page
+    if st.session_state['skip_image_generation']:
+        st.markdown(f'<meta http-equiv="refresh" content="0; url=http://localhost:8000/index.html">', unsafe_allow_html=True)
 
     # Streamlit UI
     st.markdown(
@@ -67,16 +107,25 @@ else:
             }
             .stButton button {
                 display: block;
-                margin: 20px auto;
                 border-radius: 8px;
-                padding: 12px 18px;
+                padding: 8px 18px;
                 font-size: 1.1rem;
+                margin: auto;
             }
         </style>
         """, unsafe_allow_html=True
     )
-    
+
+    # Create a two-column layout to position the "Skip" button to the right
+    col1, col2 = st.columns([8, 1])
+
+    with col2:
+        if st.button("Skip"):
+            handle_skip(tv_show)
+
+    # Heading below the button
     st.markdown("<h1 style='font-size: 36px; text-align: center;'>Creating Your Player</h1>", unsafe_allow_html=True)
+
     uploaded_file = st.file_uploader("Upload a close-up picture of your face", type=["jpg", "jpeg", "png"])
     gender = st.selectbox("Select your gender", ["Male", "Female"])
 
@@ -85,7 +134,7 @@ else:
 
     # Center the button or message
     st.markdown('<div class="center-container">', unsafe_allow_html=True)
-
+    
     # Check if the "Generate Image" button was pressed
     if not st.session_state['button_clicked']:
         if button_placeholder.button("Generate Image"):
@@ -124,8 +173,6 @@ else:
                     api_name="/generate_image"
                 )
 
-                st.write("Prediction completed.")
-
                 if result and isinstance(result, list) and "image" in result[0]:
                     first_image_path = result[0]["image"]
                     first_image = Image.open(first_image_path)
@@ -135,8 +182,6 @@ else:
 
                     save_path = os.path.join(output_dir, "generated_image_no_bg.png")
                     background_removed_image.save(save_path)
-
-                    st.write(f"Image saved to {save_path}")
 
                     # Set the session state variable to True after successful generation
                     st.session_state['image_generated'] = True
@@ -165,7 +210,6 @@ else:
 
     # Display the "Start" button if the image has been generated
     if st.session_state['image_generated']:
-        # Only navigate to the home page, don't start another generation
         if st.button("Start"):
             home_url = "http://localhost:8000/index.html"
             st.markdown(f'<meta http-equiv="refresh" content="0; url={home_url}">', unsafe_allow_html=True)
