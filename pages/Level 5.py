@@ -5,6 +5,8 @@ import numpy as np
 import scipy.io.wavfile as wav
 import re
 from streamlit_javascript import st_javascript
+import base64  
+import os  
 
 openai.api_key = 'sk-proj-SRGCSAzogrcsQIu2kwiZT3BlbkFJp02fsLG6iUdA7G5kEfKg'
 
@@ -39,6 +41,17 @@ sentences = {
     ]
 }
 
+def play_audio(file_path):
+    audio_file = open(file_path, 'rb')
+    audio_bytes = audio_file.read()
+    audio_base64 = base64.b64encode(audio_bytes).decode()
+    audio_html = f'''
+        <audio autoplay>
+        <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
+        </audio>
+    '''
+    st.markdown(audio_html, unsafe_allow_html=True)
+
 # Function to clean text by removing punctuation and converting to lowercase
 def clean_text(text):
     # Remove punctuation and convert to lowercase
@@ -47,7 +60,7 @@ def clean_text(text):
 # Function to recognize and verify speech using OpenAI Whisper API
 def recognize_speech(expected_sentence):
     samplerate = 44100  # Sample rate of the recording
-    duration = 5  # Duration of the recording
+    duration = 8  # Duration of the recording
 
     recording_placeholder = st.empty()
     recording_placeholder.markdown('<p style="text-align: center;">Recording...</p>', unsafe_allow_html=True)
@@ -226,6 +239,7 @@ def main():
         # Display final score and stars
         st.session_state.final_congratulations = True
         st.markdown('<div class="final-congratulations">Congratulations! You\'ve completed this level.</div>', unsafe_allow_html=True)
+        play_audio(os.path.join(os.path.dirname(__file__), '..', f"{show}_nextLevel.mp3"))
         points = st.session_state['level5_points']
         st.markdown(f'<div class="final-score">Your score: {points} points</div>', unsafe_allow_html=True)
 
