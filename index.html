@@ -406,7 +406,7 @@
                 updateStars(i);
             }
         
-            setTimeout(scrollToBottom, 0);
+            setTimeout(scrollToPlayerPosition, 0);
 
             // Dynamically construct the image path
             const playerImageElement = document.getElementById('player');
@@ -414,10 +414,20 @@
             playerImageElement.src = playerImagePath + '?' + new Date().getTime(); // Prevent caching by adding a timestamp
         };
 
-        function scrollToBottom() {
+        function scrollToPlayerPosition() {
             const gamePage = document.getElementById('game-page');
-            gamePage.scrollTop = gamePage.scrollHeight;
+            const player = document.getElementById('player');
+        
+            // Calculate the player's position
+            const playerPosition = player.getBoundingClientRect().top;
+        
+            // Calculate the container's position
+            const containerPosition = gamePage.getBoundingClientRect().top;
+        
+            // Calculate the difference and set the scrollTop to center the player
+            gamePage.scrollTop = gamePage.scrollTop + (playerPosition - containerPosition) - (gamePage.clientHeight / 2);
         }
+        
     </script>
 </body>
 </html>
