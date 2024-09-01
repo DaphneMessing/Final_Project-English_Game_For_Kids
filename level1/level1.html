@@ -161,7 +161,8 @@
     <div class="game-container" id="game-container">
         <button class="return-button" onclick="returnToHomePage()">←</button> <!-- Moved inside the game container -->
     </div>
-    
+    <audio id="congrats-audio" controls style="display: none;"></audio>
+
     <script>
         // Get the 'tv_show' from the URL parameters
         const urlParams = new URLSearchParams(window.location.search);
@@ -365,6 +366,15 @@
             returnButton.innerHTML = 'Return to Home Page';
             returnButton.onclick = returnToHomePage;
             container.appendChild(returnButton);
+
+            playCongratsAudio(); // Play the audio when reaching the final page
+        };
+
+        const playCongratsAudio = () => {
+            const audioElement = document.getElementById('congrats-audio');
+            const tvShowAudioFile = selectedTvShow.replace(/\s+/g, '') + '_nextLevel.mp3'; // Remove spaces and append "_nextLevel.mp3"
+            audioElement.src = `../${tvShowAudioFile}`; // Adjusted path
+            audioElement.play();
         };
 
         const resetSelection = () => {
