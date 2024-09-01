@@ -231,10 +231,10 @@ def main():
 
         # Play completion audio automatically without display
         show_no_spaces = show.replace(" ", "")
-        completion_audio_file = os.path.join(os.path.dirname(__file__), '..', f"{show_no_spaces}_nextLevel.mp3")
+        completion_audio_file = os.path.join(os.path.dirname(__file__), '..', f"{show_no_spaces}_won.mp3")
         play_audio_autoplay(completion_audio_file)
 
-        st.markdown('<div class="final-congratulations">Congratulations! You\'ve completed this level.</div>', unsafe_allow_html=True)
+        st.markdown('<div class="final-congratulations">Well done! YOU WON THE GAME! </div>', unsafe_allow_html=True)
         points = st.session_state['level16_points']
         st.markdown(f'<div class="final-score">Your score: {points} points</div>', unsafe_allow_html=True)
 

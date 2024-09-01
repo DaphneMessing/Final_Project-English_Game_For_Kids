@@ -22,8 +22,8 @@ sentences = {
     "PJ Masks": [
         "The PJ Masks are on their way.",
         "Connor turns into Catboy.",
-        "Amaya turns into Owlette.",
-        "Greg turns into Gekko.",
+        "Catboy runs fast to catch the villains.",
+        "PJ Masks stop Night Ninja.",
         "PJ Masks all shout hooray."
     ],
     "Winx Club": [

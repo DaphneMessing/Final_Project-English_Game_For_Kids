@@ -20,9 +20,9 @@ sentences = {
     ],
     "PJ Masks": [
         "Catboy uses his super speed to chase down the Night Ninja.",
-        "Owlette flies high above the city to spot trouble below.",
-        "Gekko uses his super strength to lift heavy objects effortlessly.",
-        "The PJ Masks use their Owl-Glider, Cat-Car, and Gekko-Mobile to fight crime.",
+        "Romeo makes a sleep machine, but the PJ Masks find a way to turn it off",
+        "the pj masks discover a secret cave that leads to a hidden city",
+        "Catboy helps Gekko master his new superpower.",
         "Together, the PJ Masks foil Romeo's plans to take over the world."
     ],
     "Winx Club": [
