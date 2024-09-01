@@ -6,7 +6,7 @@ import time
 
 # Function to get the sentence from the text file based on TV show and index
 def get_sentence(tv_show, sentence_index):
-    file_path = os.path.join(os.path.dirname(__file__), '..', 'sentences_level9.txt')
+    file_path = os.path.join(os.path.dirname(__file__), '..', 'sentences_level12.txt')
     with open(file_path, "r") as f:
         lines = f.readlines()
         sentences = [line.strip() for line in lines if line.startswith(tv_show)]
@@ -29,8 +29,8 @@ def calculate_and_store_score(mistakes):
         score = 1  # 1 star
 
     points = score * 100
-    st.session_state['level9_score'] = score
-    st.session_state['level9_points'] = points
+    st.session_state['level12_score'] = score
+    st.session_state['level12_points'] = points
 
 # Function to play audio using base64 encoding
 def play_audio(file_path):
@@ -112,7 +112,7 @@ def main():
     )
 
     st.markdown('<div class="container">', unsafe_allow_html=True)
-    st.markdown(f'<div class="text-container"><div class="level-heading">Level 9</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="text-container"><div class="level-heading">Level 12</div>', unsafe_allow_html=True)
 
     # Retrieve TV show from query params
     query_params = st.query_params
@@ -158,7 +158,7 @@ def main():
 
         # Prepare the audio file path based on the selected TV show and sentence index
         show_no_spaces = show.replace(" ", "")
-        audio_file = os.path.join(os.path.dirname(__file__), '..', 'audio_level9', f"{show_no_spaces}_{st.session_state.sentence_index}.mp3")
+        audio_file = os.path.join(os.path.dirname(__file__), '..', 'audio_level12', f"{show_no_spaces}_{st.session_state.sentence_index}.mp3")
 
         # Check if the MP3 file exists
         if os.path.exists(audio_file):
@@ -218,12 +218,12 @@ def main():
         # Display final score and stars
         st.session_state.final_congratulations = True
         st.markdown('<div class="final-congratulations">Congratulations! You\'ve completed this level.</div>', unsafe_allow_html=True)
-        points = st.session_state['level9_points']
+        points = st.session_state['level12_points']
         st.markdown(f'<div class="final-score">Your score: {points} points</div>', unsafe_allow_html=True)
 
         stars_container = '<div class="final-stars">'
         for i in range(1, 4):
-            star_class = 'star' if i <= st.session_state['level9_score'] else ''
+            star_class = 'star' if i <= st.session_state['level12_score'] else ''
             stars_container += f'<i class="fa fa-star {star_class}"></i>'
         stars_container += '</div>'
         st.markdown(stars_container, unsafe_allow_html=True)
@@ -234,7 +234,7 @@ def main():
             st.session_state.mistakes = 0
             st.session_state.final_congratulations = False
             st.session_state.input_key = 0  # Reset input key
-            home_url = f"http://localhost:8000/index.html?level9_score={st.session_state['level9_score']}&level9_points={st.session_state['level9_points']}"
+            home_url = f"http://localhost:8000/index.html?level12_score={st.session_state['level12_score']}&level12_points={st.session_state['level12_points']}"
             st.write(f'<meta http-equiv="refresh" content="0; url={home_url}">', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)

@@ -32,7 +32,7 @@ sentences_speech = {
 
 # Function to get the text input sentence from the text file based on TV show and index
 def get_expected_sentence(tv_show, sentence_index):
-    file_path = os.path.join(os.path.dirname(__file__), '..', 'sentences_level11.txt')
+    file_path = os.path.join(os.path.dirname(__file__), '..', 'sentences_level14.txt')
     with open(file_path, "r") as f:
         lines = f.readlines()
         sentences = [line.strip() for line in lines if line.startswith(tv_show)]
@@ -57,8 +57,8 @@ def calculate_and_store_score(mistakes):
         score = 1  # 1 star
 
     points = score * 100
-    st.session_state['level11_score'] = score
-    st.session_state['level11_points'] = points
+    st.session_state['level14_score'] = score
+    st.session_state['level14_points'] = points
 
 # Function to play audio automatically without displaying controls
 def play_audio_autoplay(file_path):
@@ -188,7 +188,7 @@ def main():
     )
 
     st.markdown('<div class="container">', unsafe_allow_html=True)
-    st.markdown(f'<div class="text-container"><div class="level-heading">Level 11</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="text-container"><div class="level-heading">Level 14</div>', unsafe_allow_html=True)
 
     # Retrieve TV show from query params
     query_params = st.query_params
@@ -235,12 +235,12 @@ def main():
         play_audio_autoplay(completion_audio_file)
 
         st.markdown('<div class="final-congratulations">Congratulations! You\'ve completed this level.</div>', unsafe_allow_html=True)
-        points = st.session_state['level11_points']
+        points = st.session_state['level14_points']
         st.markdown(f'<div class="final-score">Your score: {points} points</div>', unsafe_allow_html=True)
 
         stars_container = '<div class="final-stars">'
         for i in range(1, 4):
-            star_class = 'star' if i <= st.session_state['level11_score'] else ''
+            star_class = 'star' if i <= st.session_state['level14_score'] else ''
             stars_container += f'<i class="fa fa-star {star_class}"></i>'
         stars_container += '</div>'
         st.markdown(stars_container, unsafe_allow_html=True)
@@ -251,7 +251,7 @@ def main():
             st.session_state.mistakes = 0
             st.session_state.show_message = False
             st.session_state.input_key = 0  # Reset input key
-            home_url = f"http://localhost:8000/index.html?level11_score={st.session_state['level11_score']}&level11_points={st.session_state['level11_points']}"
+            home_url = f"http://localhost:8000/index.html?level14_score={st.session_state['level14_score']}&level14_points={st.session_state['level14_points']}"
             st.write(f'<meta http-equiv="refresh" content="0; url={home_url}">', unsafe_allow_html=True)
         return
 
@@ -316,7 +316,7 @@ def main():
             
             # Prepare the audio file path for the text input level
             show_no_spaces = show.replace(" ", "")
-            audio_file = os.path.join(os.path.dirname(__file__), '..', 'audio_level11', f"{show_no_spaces}_{(st.session_state.index - 1) // 2}.mp3")
+            audio_file = os.path.join(os.path.dirname(__file__), '..', 'audio_level14', f"{show_no_spaces}_{(st.session_state.index - 1) // 2}.mp3")
             play_audio(audio_file)  # Display styled audio control for user to click play
             
             # Display the input field with an explanation
