@@ -257,20 +257,54 @@ def main():
 
     # Determine if it's a speech or text input sentence
     if st.session_state.index % 2 == 0:
-        # Speech recognition sentence
-        sentence = sentences_speech[show][st.session_state.index // 2]
-        st.markdown(f'<div class="text-container"><p>Read the sentence: {sentence}</p>', unsafe_allow_html=True)
+        # **Updated Logic for Sentence at Index 0 and 2**
+        if st.session_state.index in [0, 2]:
+            # Implement the Level 2 logic and design
+            sentence = sentences_speech[show][st.session_state.index // 2]
+            st.markdown(f'<div class="text-container"><p>Read the sentence: {sentence}</p>', unsafe_allow_html=True)
 
-        # Record audio for speech recognition
-        if st.button("Start Recording"):
-            result = recognize_speech(sentence)
-            if result:
-                st.markdown('<div class="success-fail" style="color: green;">Correct! Moving to the next sentence.</div>', unsafe_allow_html=True)
-                time.sleep(2)
-                st.session_state.index += 1
-                st.experimental_rerun()
+            if "start_button_pressed" not in st.session_state:
+                st.session_state.start_button_pressed = False
+            if "next_sentence" not in st.session_state:
+                st.session_state.next_sentence = False
+
+            # Check if the "Start Recording" button was pressed
+            if st.session_state.start_button_pressed:
+                result = recognize_speech(sentence)
+                if result:
+                    st.session_state.success = True
+                    st.session_state.start_button_pressed = False
+                    st.session_state.next_sentence = True
+                    st.markdown('<div class="success-fail"><p style="color: green; font-size: 1.2rem;">Correct</p></div>', unsafe_allow_html=True)
+                else:
+                    st.markdown('<div class="success-fail"><p style="color: red;">Incorrect! Try again.</p></div>', unsafe_allow_html=True)
+                    st.session_state.start_button_pressed = False
+                    st.session_state.mistakes += 1
+
+            # Show the "Start Recording" button or the "Continue" button
+            if st.session_state.next_sentence:
+                if st.button("Continue"):
+                    st.session_state.next_sentence = False
+                    st.session_state.index += 1
+                    st.experimental_rerun()
             else:
-                st.markdown('<div class="success-fail" style="color: red;">Incorrect! Try again.</div>', unsafe_allow_html=True)
+                if st.button("Start Recording"):
+                    st.session_state.start_button_pressed = True
+                    st.experimental_rerun()
+        else:
+            # Original logic for other sentences
+            sentence = sentences_speech[show][st.session_state.index // 2]
+            st.markdown(f'<div class="text-container"><p>Read the sentence: {sentence}</p>', unsafe_allow_html=True)
+
+            if st.button("Start Recording"):
+                result = recognize_speech(sentence)
+                if result:
+                    st.markdown('<div class="success-fail" style="color: green;">Correct! Moving to the next sentence.</div>', unsafe_allow_html=True)
+                    time.sleep(2)
+                    st.session_state.index += 1
+                    st.experimental_rerun()
+                else:
+                    st.markdown('<div class="success-fail" style="color: red;">Incorrect! Try again.</div>', unsafe_allow_html=True)
 
     elif st.session_state.index % 2 == 1:
         # Text input sentence
@@ -327,3 +361,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
