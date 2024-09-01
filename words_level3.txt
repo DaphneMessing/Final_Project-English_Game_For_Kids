@@ -1,0 +1,31 @@
+Spongebob: Jellyfish
+Spongebob: Pineapple
+Spongebob: Snail
+Spongebob: Krabby Patty
+Spongebob: Ocean
+Spongebob: Squirrel
+Spongebob: Money
+
+PJ Masks: Villain
+PJ Masks: Moon
+PJ Masks: Night Ninja
+PJ Masks: Car
+PJ Masks: Hero
+PJ Masks: City
+PJ Masks: Climb
+
+Winx Club: Fairy
+Winx Club: Potion
+Winx Club: Magic
+Winx Club: Wings
+Winx Club: Fire
+Winx Club: Alfea
+Winx Club: Flower
+
+Spidey And His Amazing Friends: City
+Spidey And His Amazing Friends: Villain
+Spidey And His Amazing Friends: Web
+Spidey And His Amazing Friends: Spider
+Spidey And His Amazing Friends: Hero
+Spidey And His Amazing Friends: Swing
+Spidey And His Amazing Friends: Mask
