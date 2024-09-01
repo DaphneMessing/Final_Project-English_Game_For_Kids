@@ -93,8 +93,8 @@ def calculate_and_store_score(mistakes):
         score = 1  # 1 star
 
     points = score * 100
-    st.session_state['level5_score'] = score
-    st.session_state['level5_points'] = points
+    st.session_state['level8_score'] = score
+    st.session_state['level8_points'] = points
 
 def main():
     st.markdown(
@@ -160,7 +160,7 @@ def main():
     )
         
     st.markdown('<div class="container">', unsafe_allow_html=True)
-    st.markdown(f'<div class="text-container"><div class="level-heading">Level 5</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="text-container"><div class="level-heading">Level 8</div>', unsafe_allow_html=True)
 
     # Retrieve TV show from query params
     query_params = st.query_params
@@ -241,12 +241,12 @@ def main():
         show_no_spaces = show.replace(" ", "")
         st.markdown('<div class="final-congratulations">Congratulations! You\'ve completed this level.</div>', unsafe_allow_html=True)
         play_audio(os.path.join(os.path.dirname(__file__), '..', f"{show_no_spaces}_nextLevel.mp3"))
-        points = st.session_state['level5_points']
+        points = st.session_state['level8_points']
         st.markdown(f'<div class="final-score">Your score: {points} points</div>', unsafe_allow_html=True)
 
         stars_container = '<div class="final-stars">'
         for i in range(1, 4):
-            star_class = 'star' if i <= st.session_state['level5_score'] else ''
+            star_class = 'star' if i <= st.session_state['level8_score'] else ''
             stars_container += f'<i class="fa fa-star {star_class}"></i>'
         stars_container += '</div>'
         st.markdown(stars_container, unsafe_allow_html=True)
@@ -261,7 +261,7 @@ def main():
             st.session_state.final_congratulations = False
             
             # Append score and points to the URL
-            home_url = f"http://localhost:8000/index.html?level5_score={st.session_state['level5_score']}&level5_points={st.session_state['level5_points']}"
+            home_url = f"http://localhost:8000/index.html?level8_score={st.session_state['level8_score']}&level8_points={st.session_state['level8_points']}"
             st.write(f'<meta http-equiv="refresh" content="0; url={home_url}">', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 

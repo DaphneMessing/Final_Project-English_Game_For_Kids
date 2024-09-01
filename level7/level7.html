@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sentence Construction Game - Level 4</title>
+    <title>Sentence Construction Game - Level 7</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -249,7 +249,7 @@
             // Add level heading
             const levelHeading = document.createElement('div');
             levelHeading.className = 'level-heading';
-            levelHeading.innerText = `Level 4`;
+            levelHeading.innerText = `Level 7`;
             container.appendChild(levelHeading);
 
             const img = document.createElement('img');
@@ -327,8 +327,8 @@
                 score = 1; // 1 star
             }
             const points = score * 100;
-            localStorage.setItem('level4_score', score);
-            localStorage.setItem('level4_points', points);
+            localStorage.setItem('level7_score', score);
+            localStorage.setItem('level7_points', points);
         };
 
         const displayFinalPage = () => {
@@ -340,8 +340,8 @@
             congratulationsMessage.innerText = 'Congratulations! You\'ve completed this level.';
             container.appendChild(congratulationsMessage);
 
-            const score = localStorage.getItem('level4_score');
-            const points = localStorage.getItem('level4_points');
+            const score = localStorage.getItem('level7_score');
+            const points = localStorage.getItem('level7_points');
 
             const finalScoreMessage = document.createElement('div');
             finalScoreMessage.className = 'final-score';
