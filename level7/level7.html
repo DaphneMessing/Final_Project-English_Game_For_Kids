@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentence Construction Game - Level 4</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+
+        .game-container {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative; /* Ensure the return button is positioned relative to this container */
+        }
+
+        .game-container img {
+            width: 100%;
+            max-width: 350px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+
+        .game-container img:hover {
+            transform: scale(1.05);
+        }
+
+        .level-heading {
+            font-size: 2rem;
+            color: #0071e3;
+            margin-bottom: 30px;
+        }
+
+        .word-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 10px;
+        }
+
+        .selected-words {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 10px;
+            gap: 10px;
+        }
+
+        .word-buttons button, .selected-words button {
+            background-color: #0071e3;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 18px;
+            margin: 0;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .word-buttons button:hover, .selected-words button:hover {
+            background-color: #005bb5;
+            transform: translateY(-2px);
+        }
+
+        .current-selection {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #6e6e73;
+            font-weight: 500;
+        }
+
+        .continue-button {
+            background-color: #28a745;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .continue-button:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+
+        .success-message {
+            font-size: 1.8rem;
+            color: #28a745;
+            margin-top: 30px;
+            font-weight: 600;
+        }
+
+        .return-button {
+            background-color: transparent;
+            border: none;
+            color: red;
+            font-size: 2.2rem;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .return-button:hover {
+            transform: scale(1.1);
+        }
+
+        .final-congratulations {
+            font-size: 2rem;
+            color: #0071e3;
+            margin-top: 20px;
+        }
+
+        .final-score {
+            font-size: 1.5rem;
+            color: #333333;
+            margin-top: 10px;
+        }
+
+        .final-stars {
+            margin-top: 15px;
+            font-size: 2rem;
+        }
+
+        .final-stars i {
+            color: grey;
+            margin: 0 5px;
+        }
+
+        .final-stars .star {
+            color: yellow;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container" id="game-container">
+        <button class="return-button" onclick="returnToHomePage()">←</button> <!-- Moved inside the game container -->
+    </div>
+    <audio id="congrats-audio" controls style="display: none;"></audio>
+
+    <script>
+        // Get the 'tv_show' from the URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedTvShow = urlParams.get('tv_show');
+
+        if (!selectedTvShow) {
+            alert('TV show is not selected! Returning to home page.');
+            window.location.href = 'http://localhost:8000/index.html';
+        }
+
+        // Normalize the TV show name (e.g., convert to lowercase)
+        const normalizedTvShow = selectedTvShow.trim().replace(/\s+/g, '%20');
+
+        const sentenceMap = {
+            "Spongebob": [
+                "SpongeBob works at the Krusty Krab and makes Krabby Patties",
+                "Patrick Star lifts his best friend SpongeBob",
+                "Squidward often gets annoyed and looks unhappy",
+                "Sandy Cheeks lives in a glass dome and wears a suit",
+                "Mr. Krabs loves money and runs the Krusty Krab"
+            ],
+            "PJ Masks": [
+                "The PJ Masks use their powers to help people",
+                "Catboy can jump really high when he's fighting villains",
+                "Owlette uses her strong wings to protect her friends",
+                "Gekko can stick to walls when he needs to climb",
+                "The PJ Masks always work together to solve problems"
+            ],
+            "Winx Club": [
+                "Bloom uses fire magic to help her friends",
+                "Stella is the Fairy of the Shining Sun",
+                "Flora can make flowers grow and heal others",
+                "Musa uses her musical powers to create powerful sound waves",
+                "Aisha can control water to help her friends"
+            ],
+            "Spidey And His Amazing Friends": [
+                "Spidey loves to go on adventures with his friends",
+                "Gwen helps Spidey fight bad guys",
+                "Spidey and his friends work together to save the day",
+                "The team always finds a way to succeed",
+                "Green Goblin is evil and fights Spidey and his friends"
+            ]
+        };
+        
+        const images = Array.from({length: 5}, (_, i) => `${normalizedTvShow}_img/img${i + 1}.jpeg`);
+        const sentences = sentenceMap[selectedTvShow] || [];
+
+        if (!sentences.length) {
+            alert(`TV show '${selectedTvShow}' not found.`);
+            window.location.href = 'http://localhost:8000/index.html';
+        }
+
+        let shuffledWords = [];
+        let selectedWords = [];
+        let currentSentence = '';
+        let currentImageIndex = 0;
+        let mistakes = 0;
+
+        const displayImageAndSentence = () => {
+            currentSentence = sentences[currentImageIndex];
+            let words = currentSentence.split(' ');
+            shuffledWords = words.sort(() => Math.random() - 0.5);
+            selectedWords = Array(words.length).fill('_');
+
+            renderGame();
+        };
+
+        const selectWord = (index) => {
+            selectedWords[selectedWords.indexOf('_')] = shuffledWords[index];
+            shuffledWords[index] = '_';
+            renderGame();
+        };
+
+        const deselectWord = (index) => {
+            shuffledWords[shuffledWords.indexOf('_')] = selectedWords[index];
+            selectedWords[index] = '_';
+            renderGame();
+        };
+
+        const renderGame = () => {
+            const container = document.getElementById('game-container');
+            container.innerHTML = '';
+
+            // Add level heading
+            const levelHeading = document.createElement('div');
+            levelHeading.className = 'level-heading';
+            levelHeading.innerText = `Level 4`;
+            container.appendChild(levelHeading);
+
+            const img = document.createElement('img');
+            img.src = images[currentImageIndex];
+            container.appendChild(img);
+
+            const wordContainer = document.createElement('div');
+            wordContainer.className = 'word-buttons';
+            shuffledWords.forEach((word, index) => {
+                if (word !== '_') {
+                    const button = document.createElement('button');
+                    button.innerHTML = word;
+                    button.onclick = () => selectWord(index);
+                    wordContainer.appendChild(button);
+                }
+            });
+            container.appendChild(wordContainer);
+
+            const currentSelectionElement = document.createElement('div');
+            currentSelectionElement.className = 'current-selection';
+            currentSelectionElement.innerHTML = `Current selection: ${selectedWords.join(' ')}`;
+            container.appendChild(currentSelectionElement);
+
+            const selectedContainer = document.createElement('div');
+            selectedContainer.className = 'selected-words';
+            selectedWords.forEach((word, index) => {
+                if (word !== '_') {
+                    const button = document.createElement('button');
+                    button.innerHTML = word;
+                    button.onclick = () => deselectWord(index);
+                    selectedContainer.appendChild(button);
+                }
+            });
+            container.appendChild(selectedContainer);
+
+            if (selectedWords.join(' ') === currentSentence) {
+                const successMessage = document.createElement('div');
+                successMessage.className = 'success-message';
+                successMessage.innerHTML = 'Correct!';
+                container.appendChild(successMessage);
+
+                const continueButton = document.createElement('button');
+                continueButton.className = 'continue-button';
+                continueButton.innerHTML = 'Continue';
+                continueButton.onclick = () => {
+                    currentImageIndex++;
+                    if (currentImageIndex < images.length) {
+                        displayImageAndSentence();
+                    } else {
+                        calculateAndStoreScore(); // New function to calculate score
+                        displayFinalPage(); // Display the final page
+                    }
+                };
+                container.appendChild(continueButton);
+            } else if (selectedWords.indexOf('_') === -1) {
+                mistakes++;
+                alert('Incorrect! Try again.');
+                resetSelection(); // Function to reset the word selection
+            }
+
+            const returnButton = document.createElement('button');
+            returnButton.className = 'return-button';
+            returnButton.innerHTML = '←'; // Or use an arrow image if preferred
+            returnButton.onclick = returnToHomePage;
+            container.appendChild(returnButton);
+        };
+
+        const calculateAndStoreScore = () => {
+            let score = 0;
+            if (mistakes <= 1) {
+                score = 3; // 3 stars
+            } else if (mistakes <= 3) {
+                score = 2; // 2 stars
+            } else {
+                score = 1; // 1 star
+            }
+            const points = score * 100;
+            localStorage.setItem('level4_score', score);
+            localStorage.setItem('level4_points', points);
+        };
+
+        const displayFinalPage = () => {
+            const container = document.getElementById('game-container');
+            container.innerHTML = '';
+
+            const congratulationsMessage = document.createElement('div');
+            congratulationsMessage.className = 'final-congratulations';
+            congratulationsMessage.innerText = 'Congratulations! You\'ve completed this level.';
+            container.appendChild(congratulationsMessage);
+
+            const score = localStorage.getItem('level4_score');
+            const points = localStorage.getItem('level4_points');
+
+            const finalScoreMessage = document.createElement('div');
+            finalScoreMessage.className = 'final-score';
+            finalScoreMessage.innerText = `Your score: ${points} points`;
+            container.appendChild(finalScoreMessage);
+
+            const starsContainer = document.createElement('div');
+            starsContainer.className = 'final-stars';
+            for (let i = 1; i <= 3; i++) {
+                const star = document.createElement('i');
+                star.className = 'fa fa-star';
+                if (i <= score) {
+                    star.classList.add('star');
+                }
+                starsContainer.appendChild(star);
+            }
+            container.appendChild(starsContainer);
+
+            const returnButton = document.createElement('button');
+            returnButton.className = 'continue-button';
+            returnButton.innerHTML = 'Return to Home Page';
+            returnButton.onclick = returnToHomePage;
+            container.appendChild(returnButton);
+
+            playCongratsAudio(); // Play the audio when reaching the final page
+        };
+
+        const playCongratsAudio = () => {
+            const audioElement = document.getElementById('congrats-audio');
+            const tvShowAudioFile = selectedTvShow.replace(/\s+/g, '') + '_nextLevel.mp3'; // Remove spaces and append "_nextLevel.mp3"
+            audioElement.src = `../${tvShowAudioFile}`; // Adjusted path
+            audioElement.play();
+        };
+
+        const resetSelection = () => {
+            selectedWords = Array(shuffledWords.length).fill('_');
+            shuffledWords = currentSentence.split(' ').sort(() => Math.random() - 0.5);
+            renderGame();
+        };
+
+        const returnToHomePage = () => {
+            window.location.href = `http://localhost:8000/index.html`;
+        };
+
+        // Initialize the game
+        displayImageAndSentence();
+    </script>
+</body>
+</html>

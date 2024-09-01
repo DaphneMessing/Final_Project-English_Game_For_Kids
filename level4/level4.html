@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sentence Construction Game - Level 4</title>
+    <title>Sentence Construction Game - Level 1</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -176,37 +176,38 @@
         // Normalize the TV show name (e.g., convert to lowercase)
         const normalizedTvShow = selectedTvShow.trim().replace(/\s+/g, '%20');
 
+        // Define sentences directly in the script
         const sentenceMap = {
             "Spongebob": [
-                "SpongeBob works at the Krusty Krab and makes Krabby Patties",
-                "Patrick Star lifts his best friend SpongeBob",
-                "Squidward often gets annoyed and looks unhappy",
-                "Sandy Cheeks lives in a glass dome and wears a suit",
-                "Mr. Krabs loves money and runs the Krusty Krab"
+                "SpongeBob is eating ice cream",
+                "Mr.Krabs is counting money",
+                "Squidward is playing music",
+                "Plankton is being sneaky",
+                "SpongeBob is blowing bubbles"
             ],
             "PJ Masks": [
-                "The PJ Masks use their powers to help people",
-                "Catboy can jump really high when he's fighting villains",
-                "Owlette uses her strong wings to protect her friends",
-                "Gekko can stick to walls when he needs to climb",
-                "The PJ Masks always work together to solve problems"
+                "The PJ Masks are in their cars",
+                "Catboy is running fast",
+                "Owlette is flying high",
+                "Gekko is strong and green",
+                "Romeo is making trouble"
             ],
             "Winx Club": [
-                "Bloom uses fire magic to help her friends",
-                "Stella is the Fairy of the Shining Sun",
-                "Flora can make flowers grow and heal others",
-                "Musa uses her musical powers to create powerful sound waves",
-                "Aisha can control water to help her friends"
+                "Bloom is using her magic",
+                "Stella is making light",
+                "Flora is talking to plants",
+                "Musa is playing music",
+                "Tecna is fixing a gadget"
             ],
             "Spidey And His Amazing Friends": [
-                "Spidey loves to go on adventures with his friends",
-                "Gwen helps Spidey fight bad guys",
-                "Spidey and his friends work together to save the day",
-                "The team always finds a way to succeed",
-                "Green Goblin is evil and fights Spidey and his friends"
+                "Spidey is swinging on webs",
+                "Gwen is fighting bad guys",
+                "Miles is testing his webs",
+                "Peter is building something new",
+                "Spidey and his friends are together"
             ]
         };
-        
+
         const images = Array.from({length: 5}, (_, i) => `${normalizedTvShow}_img/img${i + 1}.jpeg`);
         const sentences = sentenceMap[selectedTvShow] || [];
 
@@ -249,7 +250,7 @@
             // Add level heading
             const levelHeading = document.createElement('div');
             levelHeading.className = 'level-heading';
-            levelHeading.innerText = `Level 4`;
+            levelHeading.innerText = `Level 1`;
             container.appendChild(levelHeading);
 
             const img = document.createElement('img');
@@ -327,8 +328,8 @@
                 score = 1; // 1 star
             }
             const points = score * 100;
-            localStorage.setItem('level4_score', score);
-            localStorage.setItem('level4_points', points);
+            localStorage.setItem('level1_score', score);
+            localStorage.setItem('level1_points', points);
         };
 
         const displayFinalPage = () => {
@@ -340,8 +341,8 @@
             congratulationsMessage.innerText = 'Congratulations! You\'ve completed this level.';
             container.appendChild(congratulationsMessage);
 
-            const score = localStorage.getItem('level4_score');
-            const points = localStorage.getItem('level4_points');
+            const score = localStorage.getItem('level1_score');
+            const points = localStorage.getItem('level1_points');
 
             const finalScoreMessage = document.createElement('div');
             finalScoreMessage.className = 'final-score';

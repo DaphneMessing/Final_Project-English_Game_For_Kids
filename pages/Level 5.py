@@ -10,34 +10,35 @@ import os
 
 openai.api_key = 'sk-proj-SRGCSAzogrcsQIu2kwiZT3BlbkFJp02fsLG6iUdA7G5kEfKg'
 
+# Define sentences for each TV show
 sentences = {
     "Spongebob": [
-        "Squidward, Spongebob's neighbor, loves to play the clarinet.",
-        "Spongebob enjoys flipping Krabby Patties at the Krusty Krab.",
-        "Patrick often joins Spongebob on his jellyfishing adventures.",
-        "Spongebob and Sandy Cheeks often practice karate together.",
-        "Plankton constantly schemes to steal the Krabby Patty secret formula."
+        "Spongebob lives in a pineapple under the sea.",
+        "Patrick is Spongebob's best friend.",
+        "Spongebob loves to catch jellyfish.",
+        "Gary is Spongebob's pet snail.",
+        "Sandy Cheeks is a squirrel."    
     ],
     "PJ Masks": [
-        "Catboy uses his super speed to chase down the Night Ninja.",
-        "Owlette flies high above the city to spot trouble below.",
-        "Gekko uses his super strength to lift heavy objects effortlessly.",
-        "The PJ Masks use their Owl-Glider, Cat-Car, and Gekko-Mobile to fight crime.",
-        "Together, the PJ Masks foil Romeo's plans to take over the world."
+        "The PJ Masks are on their way.",
+        "Connor turns into Catboy.",
+        "Amaya turns into Owlette.",
+        "Greg turns into Gekko.",
+        "PJ Masks all shout hooray."
     ],
     "Winx Club": [
-        "Bloom learns to control the Dragon Flame, her powerful magical ability.",
-        "The Winx Club often battles evil witches like Icy, Darcy, and Stormy.",
-        "Stella creates dazzling light shields to protect her friends in battle.",
-        "Tecna uses her technological gadgets to solve tricky problems.",
-        "Musa’s songs and melodies can enchant and calm fierce creatures."
+        "Bloom is the leader of the Winx Club.",
+        "Stella is the Fairy of the Shining Sun.",
+        "Flora is the Fairy of Nature.",
+        "Musa is the Fairy of Music.",
+        "Tecna is the Fairy of Technology."
     ],
     "Spidey And His Amazing Friends": [
-        "Spidey and his friends collaborate to outsmart the tricky Green Goblin.",
-        "Ghost-Spider uses her acrobatic skills to dodge enemy attacks.",
-        "Miles Morales, also known as Spin, has the power of invisibility.",
-        "Teamwork and friendship help Spidey’s team overcome the toughest villains.",
-        "They use their web shooters and quick reflexes to save the city."
+        "Spidey swings through the city to stop villains.",
+        "Gwen is known as Ghost-Spider.",
+        "Miles is Spidey's friend and partner.",
+        "Spidey works together with his friends.",
+        "They protect the city from danger."
     ]
 }
 
@@ -52,6 +53,7 @@ def play_audio(file_path):
     '''
     st.markdown(audio_html, unsafe_allow_html=True)
 
+
 # Function to clean text by removing punctuation and converting to lowercase
 def clean_text(text):
     # Remove punctuation and convert to lowercase
@@ -60,7 +62,7 @@ def clean_text(text):
 # Function to recognize and verify speech using OpenAI Whisper API
 def recognize_speech(expected_sentence):
     samplerate = 44100  # Sample rate of the recording
-    duration = 8  # Duration of the recording
+    duration = 5  # Duration of the recording
 
     recording_placeholder = st.empty()
     recording_placeholder.markdown('<p style="text-align: center;">Recording...</p>', unsafe_allow_html=True)
@@ -93,8 +95,8 @@ def calculate_and_store_score(mistakes):
         score = 1  # 1 star
 
     points = score * 100
-    st.session_state['level5_score'] = score
-    st.session_state['level5_points'] = points
+    st.session_state['level2_score'] = score
+    st.session_state['level2_points'] = points
 
 def main():
     st.markdown(
@@ -160,7 +162,7 @@ def main():
     )
         
     st.markdown('<div class="container">', unsafe_allow_html=True)
-    st.markdown(f'<div class="text-container"><div class="level-heading">Level 5</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="text-container"><div class="level-heading">Level 2</div>', unsafe_allow_html=True)
 
     # Retrieve TV show from query params
     query_params = st.query_params
@@ -169,7 +171,7 @@ def main():
 
     # Check if the TV show is already selected and stored
     if "selected_tv_show" not in st.session_state:
-        st.session_state["selected_tv_show"] = "PJ Masks"  # Default to PJ Masks
+        st.session_state["selected_tv_show"] = "Spongebob"  # Default to PJ Masks
 
     # Get the selected TV show
     show = st.session_state["selected_tv_show"]
@@ -224,7 +226,7 @@ def main():
                 st.session_state.mistakes += 1
 
         # Show the "Start Recording" button or the "Continue" button
-        if st.session_state.next_sentence:
+        if st.session_state.next_sentence:  
             if st.button("Continue"):
                 st.session_state.next_sentence = False
                 st.session_state.index += 1
@@ -241,12 +243,12 @@ def main():
         show_no_spaces = show.replace(" ", "")
         st.markdown('<div class="final-congratulations">Congratulations! You\'ve completed this level.</div>', unsafe_allow_html=True)
         play_audio(os.path.join(os.path.dirname(__file__), '..', f"{show_no_spaces}_nextLevel.mp3"))
-        points = st.session_state['level5_points']
+        points = st.session_state['level2_points']
         st.markdown(f'<div class="final-score">Your score: {points} points</div>', unsafe_allow_html=True)
 
         stars_container = '<div class="final-stars">'
         for i in range(1, 4):
-            star_class = 'star' if i <= st.session_state['level5_score'] else ''
+            star_class = 'star' if i <= st.session_state['level2_score'] else ''
             stars_container += f'<i class="fa fa-star {star_class}"></i>'
         stars_container += '</div>'
         st.markdown(stars_container, unsafe_allow_html=True)
@@ -261,7 +263,7 @@ def main():
             st.session_state.final_congratulations = False
             
             # Append score and points to the URL
-            home_url = f"http://localhost:8000/index.html?level5_score={st.session_state['level5_score']}&level5_points={st.session_state['level5_points']}"
+            home_url = f"http://localhost:8000/index.html?level2_score={st.session_state['level2_score']}&level2_points={st.session_state['level2_points']}"
             st.write(f'<meta http-equiv="refresh" content="0; url={home_url}">', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
