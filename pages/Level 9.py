@@ -111,18 +111,6 @@ def main():
         """, unsafe_allow_html=True
     )
 
-    # Display "Return to Home Page" button as a red arrow
-    st.markdown(
-        """
-        <div class="return-arrow">
-            <a href="http://localhost:8000/index.html" target="_self">
-                <i class="fas fa-arrow-left" style="color: red; font-size: 24px;"></i>
-            </a>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
     st.markdown('<div class="container">', unsafe_allow_html=True)
     st.markdown(f'<div class="text-container"><div class="level-heading">Level 9</div>', unsafe_allow_html=True)
 
@@ -154,6 +142,18 @@ def main():
     sentence = get_sentence(show, st.session_state.sentence_index)
 
     if sentence:
+        # Display "Return to Home Page" button as a red arrow
+        st.markdown(
+            """
+            <div class="return-arrow" style="position: absolute; top: -120px; left: 10px; cursor: pointer;">
+                <a href="http://localhost:8000/index.html" target="_self">
+                    <i class="fas fa-arrow-left" style="color: red; font-size: 24px;"></i>
+                </a>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
         st.markdown(f'<div class="text-container"><p>Listen to the sentence:</p>', unsafe_allow_html=True)
 
         # Prepare the audio file path based on the selected TV show and sentence index
