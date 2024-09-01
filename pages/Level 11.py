@@ -13,8 +13,20 @@ openai.api_key = 'sk-proj-SRGCSAzogrcsQIu2kwiZT3BlbkFJp02fsLG6iUdA7G5kEfKg'
 # Sentences for speech recognition
 sentences_speech = {
     "PJ Masks": [
-        "hello",
-        "hello nice"
+        "Night Ninja sets a trap for the PJ Masks in the city park.",
+        "Catboy uses his super hearing to locate a lost kitten stuck in a tree."
+    ],
+    "Spongebob": [
+        "Mr. Krabs is always looking for ways to save money at the Krusty Krab.",
+        "Spongebob discovers a hidden underwater cave filled with glowing seaweed."
+    ],
+    "Winx Club": [
+        "The Winx fairies travel to a mystical forest to find a magical crystal.",
+        "Tecna solves a puzzle to open a door to a magical room."
+    ],
+    "Spidey And His Amazing Friends": [
+        "The friends make a plan to stop Rhino from causing trouble.",
+        "Team Spidey stops the Green Goblin from stealing jewels."
     ]
 }
 
@@ -175,18 +187,6 @@ def main():
         """, unsafe_allow_html=True
     )
 
-    # Display "Return to Home Page" button as a red arrow
-    st.markdown(
-        """
-        <div class="return-arrow">
-            <a href="http://localhost:8000/index.html" target="_self">
-                <i class="fas fa-arrow-left" style="color: red; font-size: 24px;"></i>
-            </a>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
     st.markdown('<div class="container">', unsafe_allow_html=True)
     st.markdown(f'<div class="text-container"><div class="level-heading">Level 11</div>', unsafe_allow_html=True)
 
@@ -212,6 +212,19 @@ def main():
     if 'input_key' not in st.session_state:
         st.session_state.input_key = 0
 
+    if st.session_state.index < 4:
+        # Display "Return to Home Page" button as a red arrow
+        st.markdown(
+            """
+            <div class="return-arrow" style="position: absolute; top: -120px; left: 10px; cursor: pointer;">
+                <a href="http://localhost:8000/index.html" target="_self">
+                    <i class="fas fa-arrow-left" style="color: red; font-size: 24px;"></i>
+                </a>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
     # Check if all sentences have been completed
     if st.session_state.index >= 4:
         calculate_and_store_score(st.session_state.mistakes)
@@ -221,7 +234,7 @@ def main():
         completion_audio_file = os.path.join(os.path.dirname(__file__), '..', f"{show_no_spaces}_nextLevel.mp3")
         play_audio_autoplay(completion_audio_file)
 
-        st.markdown('<div class="final-congratulations">Congratulations! You\'ve completed the level.</div>', unsafe_allow_html=True)
+        st.markdown('<div class="final-congratulations">Congratulations! You\'ve completed this level.</div>', unsafe_allow_html=True)
         points = st.session_state['level11_points']
         st.markdown(f'<div class="final-score">Your score: {points} points</div>', unsafe_allow_html=True)
 
@@ -314,4 +327,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
