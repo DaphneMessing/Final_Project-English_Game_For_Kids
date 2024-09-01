@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sentence Construction Game - Level 10</title>
+    <title>Sentence Construction Game - Level 13</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -155,11 +155,20 @@
         .final-stars .star {
             color: yellow;
         }
+        .timer {
+            position: absolute;
+            top: 25px;
+            right: 20px; /* Increased the right offset */
+            font-size: 1.3rem;
+            color: #ff0000; /* Black color */
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <div class="game-container" id="game-container">
         <button class="return-button" onclick="returnToHomePage()">←</button> <!-- Moved inside the game container -->
+        <div class="timer" id="timer">Time remaining: 20s</div> <!-- Updated Timer display -->
     </div>
     <audio id="congrats-audio" controls style="display: none;"></audio>
 
@@ -179,35 +188,34 @@
         // Define sentences directly in the script
         const sentenceMap = {
             "Spongebob": [
-                "SpongeBob and Patrick decided to go jellyfishing on a sunny day in Bikini Bottom",
-                "Squidward is playing his clarinet while SpongeBob happily plays his ukulele",
-                "Mr. Krabs always counts his money carefully at the end of every day",
-                "Plankton devised a sneaky plan to steal the secret Krabby Patty formula",
-                "Sandy Cheeks invented a new gadget to explore the deepest parts of the ocean"
+                "SpongeBob and Patrick build the Krusty Krab in the beach",
+                "Squidward tries to teach Patrick how to play the clarinet",
+                "Mr. Krabs catches Plankton trying in to steal the secret Krabby Patty formula",
+                "SpongeBob and Sandy are practicing karate moves in SpongeBob's house",
+                "SpongeBob nervously takes his driving test again with Mrs. Puff"
             ],
             "PJ Masks": [
-                "The nighttime heroes must stop the sneaky villain from stealing the magic crystals",
-                "Owlette flew high above the city, searching for Luna Girl's secret lair",
-                "Luna Girl used her moths to create a powerful gust of wind",
-                "The PJ Masks learned that teamwork is the key to every victory",
-                "Gekko's muscles helped him lift the heavy boulder blocking their path"
+                "The PJ Masks gasp in shock as they spot a new villain in the forest",
+                "Owlette searches for clues with her super owl eyes",
+                "Gekko finds a clue inside the PJ Robot’s helmet that could help the team stop Romeo's plan",
+                "Gekko and Catboy use their super sight to find the source of the mysterious lights in the city",
+                "Romeo captures Catboy and Gekko with his special rope"
             ],
             "Winx Club": [
-                "Bloom discovered a hidden power within her that she had never known before",
-                "The Winx girls traveled to the enchanted forest to find the lost fairy dust",
-                "Stella used her light magic to brighten the darkest corners of the cave",
-                "Musa played a melody that calmed the fierce dragon guarding the gate",
-                "Aisha combined her water powers with Flora's plant magic to defeat the enemies"
+                "Bloom is searching in the enchanted forest for the lost fairy ring",
+                "Icy casts a powerful spell to stop the Winx fairies from reaching their goal",
+                "The Specialists gather, ready to defend Alfea and support the Winx against their enemies",
+                "Flora and Stella combine their powers to create a powerful shield",
+                "The Trix unleash their dark magic together to create a powerful spell against the Winx"
             ],
             "Spidey And His Amazing Friends": [
-                "Spidey has captured the Green Goblin with his webs and is watching over him",
-                "Gwen Stacy used her spider-sense to detect danger before it was too late",
-                "Green Goblin, Doc Ock, and Rhino are teaming up for trouble in the city",
-                "Spidey, Ghost-Spider, and Spin are trapped inside a cage of glowing green energy, searching for a way to escape",
-                "Hulk, Ms. Marvel, and Black Panther leap forward, determined to stop the city's newest threat"
+                "Spidey, Ghost-Spider, and Spin celebrate after stopping Rhino and recovering the stolen money bag",
+                "Spidey and Black Panther team up to protect the city from incoming danger at the amusement park",
+                "Spidey, Spin, and Ghost-Spider use their glowing webs to create a giant trap for the escaping villains",
+                "Spidey, Ghost-Spider, Spin, and Iron Man prepare to face off against a powerful enemy inside the secret lab",
+                "Spidey, Hulk, and Ms. Marvel team up to chase down Rhino before he causes more trouble in the city"
             ]
-        };
-
+        };       
 
         const images = Array.from({length: 5}, (_, i) => `${normalizedTvShow}_img/img${i + 1}.jpg`);
         const sentences = sentenceMap[selectedTvShow] || [];
@@ -223,6 +231,29 @@
         let currentImageIndex = 0;
         let mistakes = 0;
 
+        let timer;
+        const timeLimit = 20; // 20 seconds time limit
+        let timeLeft = timeLimit;
+
+        const startTimer = () => {
+            clearInterval(timer); // Clear any existing timer
+            timeLeft = timeLimit; // Reset time left
+            document.getElementById('timer').textContent = `Time remaining: ${timeLeft}s`; // Initialize the timer display
+
+            timer = setInterval(() => {
+                timeLeft -= 1;
+                document.getElementById('timer').textContent = `Time remaining: ${timeLeft}s`; // Update timer display
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    mistakes++;
+                    alert('Time is up! Try again.');
+                    resetSelection(); // Reset the selection
+                }
+            }, 1000); // Decrease time left every second
+        };
+
+
         const displayImageAndSentence = () => {
             currentSentence = sentences[currentImageIndex];
             let words = currentSentence.split(' ');
@@ -230,12 +261,14 @@
             selectedWords = Array(words.length).fill('_');
 
             renderGame();
+            startTimer(); // Start the timer for each new sentence
         };
 
         const selectWord = (index) => {
             selectedWords[selectedWords.indexOf('_')] = shuffledWords[index];
             shuffledWords[index] = '_';
             renderGame();
+            startTimer(); // Restart the timer on each word selection
         };
 
         const deselectWord = (index) => {
@@ -248,10 +281,17 @@
             const container = document.getElementById('game-container');
             container.innerHTML = '';
 
+            // Add the timer display back to the container
+            const timerDisplay = document.createElement('div');
+            timerDisplay.className = 'timer';
+            timerDisplay.id = 'timer';
+            timerDisplay.textContent = `Time remaining: ${timeLeft}s`; // Updated timer display text
+            container.appendChild(timerDisplay);
+
             // Add level heading
             const levelHeading = document.createElement('div');
             levelHeading.className = 'level-heading';
-            levelHeading.innerText = `Level 10`;
+            levelHeading.innerText = `Level 13`;
             container.appendChild(levelHeading);
 
             const img = document.createElement('img');
@@ -288,6 +328,7 @@
             container.appendChild(selectedContainer);
 
             if (selectedWords.join(' ') === currentSentence) {
+                clearTimeout(timer); // Stop the timer when the player succeeds
                 const successMessage = document.createElement('div');
                 successMessage.className = 'success-message';
                 successMessage.innerHTML = 'Correct!';
@@ -329,8 +370,8 @@
                 score = 1; // 1 star
             }
             const points = score * 100;
-            localStorage.setItem('level10_score', score);
-            localStorage.setItem('level10_points', points);
+            localStorage.setItem('level13_score', score);
+            localStorage.setItem('level13_points', points);
         };
 
         const displayFinalPage = () => {
@@ -342,8 +383,8 @@
             congratulationsMessage.innerText = 'Congratulations! You\'ve completed this level.';
             container.appendChild(congratulationsMessage);
 
-            const score = localStorage.getItem('level10_score');
-            const points = localStorage.getItem('level10_points');
+            const score = localStorage.getItem('level13_score');
+            const points = localStorage.getItem('level13_points');
 
             const finalScoreMessage = document.createElement('div');
             finalScoreMessage.className = 'final-score';
@@ -382,9 +423,11 @@
             selectedWords = Array(shuffledWords.length).fill('_');
             shuffledWords = currentSentence.split(' ').sort(() => Math.random() - 0.5);
             renderGame();
+            startTimer(); // Restart the timer when the selection is reset
         };
 
         const returnToHomePage = () => {
+            clearInterval(timer); // Clear the timer when returning to the home page
             window.location.href = `http://localhost:8000/index.html`;
         };
 

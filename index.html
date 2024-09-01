@@ -255,7 +255,7 @@
             localStorage.setItem('currentLevel', level.toString());
         
             movePlayerTo(level).then(() => {
-                if (level === 1 || level === 4 || level === 7 || level === 10) {
+                if (level === 1 || level === 4 || level === 7 || level === 10 || level === 13) {
                     const url = `http://localhost:8000/level${level}/level${level}.html?tv_show=${encodeURIComponent(selectedTVShow)}`;
                     console.log("Navigating to:", url);
                     window.location.href = url;    
