@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentence Construction Game - Level 20</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+
+        .game-container {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative; /* Ensure the return button is positioned relative to this container */
+        }
+
+        .game-container img {
+            width: 100%;
+            max-width: 350px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+
+        .game-container img:hover {
+            transform: scale(1.05);
+        }
+
+        .level-heading {
+            font-size: 2rem;
+            color: #0071e3;
+            margin-bottom: 30px;
+        }
+
+        .word-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 10px;
+        }
+
+        .selected-words {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 10px;
+            gap: 10px;
+        }
+
+        .word-buttons button, .selected-words button {
+            background-color: #0071e3;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 18px;
+            margin: 0;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .word-buttons button:hover, .selected-words button:hover {
+            background-color: #005bb5;
+            transform: translateY(-2px);
+        }
+
+        .current-selection {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #6e6e73;
+            font-weight: 500;
+        }
+
+        .continue-button {
+            background-color: #28a745;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .continue-button:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+
+        .success-message {
+            font-size: 1.8rem;
+            color: #28a745;
+            margin-top: 30px;
+            font-weight: 600;
+        }
+
+        .return-button {
+            background-color: transparent;
+            border: none;
+            color: red;
+            font-size: 2.2rem;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .return-button:hover {
+            transform: scale(1.1);
+        }
+
+        .final-congratulations {
+            font-size: 2rem;
+            color: #0071e3;
+            margin-top: 20px;
+        }
+
+        .final-score {
+            font-size: 1.5rem;
+            color: #333333;
+            margin-top: 10px;
+        }
+
+        .final-stars {
+            margin-top: 15px;
+            font-size: 2rem;
+        }
+
+        .final-stars i {
+            color: grey;
+            margin: 0 5px;
+        }
+
+        .final-stars .star {
+            color: yellow;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container" id="game-container">
+        <button class="return-button" onclick="returnToHomePage()">←</button> 
+    </div>
+    <audio id="congrats-audio" controls style="display: none;"></audio>
+
+    <script>
+        // Get the 'tv_show' from the URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedTvShow = urlParams.get('tv_show');
+
+        if (!selectedTvShow) {
+            alert('TV show is not selected! Returning to home page.');
+            window.location.href = 'http://localhost:8000/index.html';
+        }
+
+        // Normalize the TV show name (e.g., remove spaces)
+        const normalizedTvShow = selectedTvShow.trim().replace(/\s+/g, '');
+
+        // Define word options (similar to your code)
+        const wordOptions = {
+            "Spongebob": [
+                ["Cat", "Jellyfish", "Shark"],
+                ["Apple", "Watermelon", "Pineapple"],
+                ["Gary the Snail", "Gary the Dog", "Gary the Bird"],
+                ["Pasta", "Salad", "Krabby Patty"],
+                ["Land", "Ocean", "Pool"],
+                ["Sandy Cheeks the Shark", "Sandy Cheeks the Squirrel", "Sandy Cheeks the Starfish"],
+                ["Money", "Mermaid", "Museum"]
+            ],
+            "PJ Masks": [
+                ["Romeo the villain", "Romeo the Hero", "Catboy the villain"],
+                ["Sun", "Moon", "Starfish"],
+                ["Romeo", "Night Ninja", "Luna girl"],
+                ["Car", "Bicycle", "Motorcycle"],
+                ["Catboy the hero", "Luna Girl the hero", "Owlette the hero"],
+                ["City", "Catboy", "Car"],
+                ["Gekko crying", "Gekko climbing", "Romeo"]
+            ],
+            "Winx Club": [
+                ["Cat", "Fairy", "Plant"],
+                ["Potion", "Musa", "Wings"],
+                ["Bloom's magic", "Stella's magic", "Tecna"],
+                ["Wings", "Wallet", "Week"],
+                ["Ice", "Fire", "Rock"],
+                ["Alfea", "Tecna", "Flora"],
+                ["Potion", "Flower", "Castle"]
+            ],
+            "Spidey And His Amazing Friends": [
+                ["City", "Spidey", "Car"],
+                ["Rhino the villain", "Green Goblin the Hero", "Ghost-Spider the villain"],
+                ["Wale", "Web", "Window"],
+                ["Green Goblin", "Rhino", "Spider"],
+                ["Gwen the hero", "Doc Ock the hero", "Spin the hero"],
+                ["Swing", "Car", "Slow"],
+                ["Cat", "Mask", "Villain"]
+            ]
+        };
+
+        // Array of correct answers for each level
+        const correctAnswers = {
+            "Spongebob": [
+                "Jellyfish", "Pineapple", "Gary the Snail", "Krabby Patty", "Ocean", "Sandy Cheeks the Squirrel", "Money"
+            ],
+            "PJ Masks": [
+                "Romeo the villain", "Moon", "Night Ninja", "Car", "Owlette the hero", "City", "Gekko climbing"
+            ],
+            "Winx Club": [
+                "Fairy", "Potion", "Stella's magic", "Wings", "Fire", "Alfea", "Flower"
+            ],
+            "Spidey And His Amazing Friends": [
+                "City", "Rhino the villain", "Web", "Spider", "Spin the hero", "Swing", "Mask"
+            ]
+        };
+
+        // Generate the list of image paths based on the selected TV show
+        const images = Array.from({ length: 7 }, (_, i) => `${normalizedTvShow}_img/img${i + 1}.jpeg?v=${new Date().getTime()}`);
+
+        if (!images.length) {
+            alert(`TV show '${selectedTvShow}' not found.`);
+            window.location.href = 'http://localhost:8000/index.html';
+        }
+
+        let currentImageIndex = 0;
+        let mistakes = 0;
+
+        const displayImageAndOptions = () => {
+            const container = document.getElementById('game-container');
+            container.innerHTML = '';
+
+            // Add level heading
+            const levelHeading = document.createElement('div');
+            levelHeading.className = 'level-heading';
+            levelHeading.innerText = `Level 20`;
+            container.appendChild(levelHeading);
+
+            const img = document.createElement('img');
+            img.src = images[currentImageIndex];
+            console.log(`Loading image from: ${img.src}`); // Debug print
+            container.appendChild(img);
+
+            const optionsContainer = document.createElement('div');
+            optionsContainer.className = 'word-buttons';
+
+            const options = wordOptions[selectedTvShow][currentImageIndex];
+            options.forEach((option) => {
+                const button = document.createElement('button');
+                button.innerHTML = option;
+                button.onclick = () => checkAnswer(option, correctAnswers[selectedTvShow][currentImageIndex]);
+                optionsContainer.appendChild(button);
+            });
+            container.appendChild(optionsContainer);
+
+            const returnButton = document.createElement('button');
+            returnButton.className = 'return-button';
+            returnButton.innerHTML = '←';
+            returnButton.onclick = returnToHomePage;
+            container.appendChild(returnButton);
+        };
+
+        const checkAnswer = (selectedOption, correctOption) => {
+            if (selectedOption === correctOption) {
+                showSuccessMessage();
+            } else {
+                mistakes++;
+                alert('Incorrect! Try again.');
+            }
+        };
+
+        const showSuccessMessage = () => {
+            const container = document.getElementById('game-container');
+            const successMessage = document.createElement('div');
+            successMessage.className = 'success-message';
+            successMessage.innerHTML = 'Correct!';
+            container.appendChild(successMessage);
+
+            const continueButton = document.createElement('button');
+            continueButton.className = 'continue-button';
+            continueButton.innerHTML = 'Continue';
+            continueButton.onclick = () => {
+                currentImageIndex++;
+                if (currentImageIndex < images.length) {
+                    displayImageAndOptions();
+                } else {
+                    calculateAndStoreScore();
+                    displayFinalPage();
+                }
+            };
+            container.appendChild(continueButton);
+        };
+
+        const calculateAndStoreScore = () => {
+            let score = 0;
+            if (mistakes <= 1) {
+                score = 3; // 3 stars
+            } else if (mistakes <= 3) {
+                score = 2; // 2 stars
+            } else {
+                score = 1; // 1 star
+            }
+            const points = score * 100;
+            localStorage.setItem('level20_score', score);
+            localStorage.setItem('level20_points', points);
+        };
+
+        const displayFinalPage = () => {
+            const container = document.getElementById('game-container');
+            container.innerHTML = '';
+
+            const congratulationsMessage = document.createElement('div');
+            congratulationsMessage.className = 'final-congratulations';
+            congratulationsMessage.innerText = 'Congratulations! You\'ve completed this level.';
+            container.appendChild(congratulationsMessage);
+
+            const score = localStorage.getItem('level20_score');
+            const points = localStorage.getItem('level20_points');
+
+            const finalScoreMessage = document.createElement('div');
+            finalScoreMessage.className = 'final-score';
+            finalScoreMessage.innerText = `Your score: ${points} points`;
+            container.appendChild(finalScoreMessage);
+
+            const starsContainer = document.createElement('div');
+            starsContainer.className = 'final-stars';
+            for (let i = 1; i <= 3; i++) {
+                const star = document.createElement('i');
+                star.className = 'fa fa-star';
+                if (i <= score) {
+                    star.classList.add('star');
+                }
+                starsContainer.appendChild(star);
+            }
+            container.appendChild(starsContainer);
+
+            const returnButton = document.createElement('button');
+            returnButton.className = 'continue-button';
+            returnButton.innerHTML = 'Return to Home Page';
+            returnButton.onclick = returnToHomePage;
+            container.appendChild(returnButton);
+
+            playCongratsAudio(); // Play the audio when reaching the final page
+        };
+
+        const playCongratsAudio = () => {
+            const audioElement = document.getElementById('congrats-audio');
+            const tvShowAudioFile = selectedTvShow.replace(/\s+/g, '') + '_nextLevel.mp3'; // Remove spaces and append "_nextLevel.mp3"
+            audioElement.src = `../${tvShowAudioFile}`; // Adjusted path
+            audioElement.play();
+        };
+
+        const returnToHomePage = () => {
+            window.location.href = `http://localhost:8000/index.html`;
+        };
+
+        // Initialize the game
+        displayImageAndOptions();
+    </script>
+</body>
+</html>
