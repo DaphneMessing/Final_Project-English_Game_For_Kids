@@ -268,7 +268,6 @@
             selectedWords[selectedWords.indexOf('_')] = shuffledWords[index];
             shuffledWords[index] = '_';
             renderGame();
-            startTimer(); // Restart the timer on each word selection
         };
 
         const deselectWord = (index) => {
