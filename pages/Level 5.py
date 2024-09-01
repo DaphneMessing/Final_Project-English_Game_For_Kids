@@ -238,8 +238,9 @@ def main():
 
         # Display final score and stars
         st.session_state.final_congratulations = True
+        show_no_spaces = show.replace(" ", "")
         st.markdown('<div class="final-congratulations">Congratulations! You\'ve completed this level.</div>', unsafe_allow_html=True)
-        play_audio(os.path.join(os.path.dirname(__file__), '..', f"{show}_nextLevel.mp3"))
+        play_audio(os.path.join(os.path.dirname(__file__), '..', f"{show_no_spaces}_nextLevel.mp3"))
         points = st.session_state['level5_points']
         st.markdown(f'<div class="final-score">Your score: {points} points</div>', unsafe_allow_html=True)
 
