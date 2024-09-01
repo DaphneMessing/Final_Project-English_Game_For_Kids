@@ -57,6 +57,7 @@
 #                 justify-content: center;
 #                 align-items: center;
 #                 flex-direction: column;
+#                 position: relative;
 #             }
 #             .text-container {
 #                 text-align: center;
@@ -105,6 +106,14 @@
 #                 top: 10px;
 #                 left: 10px;
 #                 cursor: pointer;
+#             }
+#             .timer {
+#                 position: absolute;
+#                 top: 25px;
+#                 right: 20px;
+#                 font-size: 1.3rem;
+#                 color: #ff0000;
+#                 font-weight: bold;
 #             }
 #         </style>
 #         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -167,6 +176,9 @@
 #         else:
 #             st.error(f"Audio file {audio_file} not found.")
 
+#         # Display the timer in the top right corner
+#         timer_placeholder = st.markdown(f'<div class="timer" id="timer">Time remaining: 20s</div>', unsafe_allow_html=True)
+
 #         # Display the input field with an explanation
 #         st.markdown('<div class="text-container"><p>What did you hear?</p>', unsafe_allow_html=True)
 
@@ -182,18 +194,24 @@
 #             # Submit button within the form
 #             submit_button = st.form_submit_button("Submit")
 
-#             # Placeholder for the timer
-#             timer_placeholder = st.empty()
-
 #             # Countdown timer for 20 seconds
-#             for i in range(20, 0, -1):
-#                 timer_placeholder.markdown(f"**Time remaining: {i} seconds**")
-#                 time.sleep(1)
-#                 if submit_button:  # If user submits, break the loop
-#                     break
-#             else:
-#                 # Auto-submit if time runs out
-#                 submit_button = True
+#             if 'timer_running' not in st.session_state:
+#                 st.session_state['timer_running'] = True
+
+#             if st.session_state['timer_running']:
+#                 timer_start = time.time()
+#                 for i in range(20, 0, -1):
+#                     if not st.session_state['timer_running']:
+#                         break
+#                     timer_placeholder.markdown(f'<div class="timer">Time remaining: {i}s</div>', unsafe_allow_html=True)
+#                     time.sleep(1)
+#                     if submit_button:  # If user submits, break the loop
+#                         st.session_state['timer_running'] = False
+#                         break
+#                 else:
+#                     # Auto-submit if time runs out
+#                     submit_button = True
+#                     st.session_state['timer_running'] = False
 
 #         # Placeholder for the message
 #         message_placeholder = st.empty()
@@ -212,6 +230,7 @@
 #                 st.session_state.sentence_index += 1
 #                 st.session_state.input_key += 1  # Change key to reset input box
 #                 st.session_state.show_message = False  # Reset message visibility
+#                 st.session_state['timer_running'] = True  # Restart the timer for the next round
 #                 st.rerun()
 #             else:
 #                 message_placeholder.markdown('<div class="success-fail" style="color: red;">Incorrect! Try again.</div>', unsafe_allow_html=True)
@@ -219,6 +238,7 @@
 #                 st.session_state.mistakes += 1
 #                 st.session_state.input_key += 1  # Change key to reset input box
 #                 st.session_state.show_message = False  # Reset message visibility
+#                 st.session_state['timer_running'] = True  # Restart the timer for the next round
 #                 st.rerun()
 #     else:
 #         calculate_and_store_score(st.session_state.mistakes)
@@ -247,6 +267,7 @@
 #             st.session_state.mistakes = 0
 #             st.session_state.final_congratulations = False
 #             st.session_state.input_key = 0  # Reset input key
+#             st.session_state['timer_running'] = True  # Restart timer when returning to home
 #             home_url = f"http://localhost:8000/index.html?level15_score={st.session_state['level15_score']}&level15_points={st.session_state['level15_points']}"
 #             st.write(f'<meta http-equiv="refresh" content="0; url={home_url}">', unsafe_allow_html=True)
 
@@ -254,7 +275,6 @@
 
 # if __name__ == "__main__":
 #     main()
-
 
 
 import streamlit as st
@@ -368,11 +388,15 @@ def main():
             }
             .timer {
                 position: absolute;
-                top: 25px;
+                top: 20px;
                 right: 20px;
-                font-size: 1.3rem;
-                color: #ff0000;
+                font-size: 2rem; /* Increased font size */
+                color: #ff4500; /* Changed color for prominence */
                 font-weight: bold;
+                background-color: #fff; /* Background for better visibility */
+                padding: 10px 20px; /* Padding for a better look */
+                border-radius: 8px; /* Rounded corners */
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
             }
         </style>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -471,6 +495,7 @@ def main():
                     # Auto-submit if time runs out
                     submit_button = True
                     st.session_state['timer_running'] = False
+                    st.markdown('<div class="success-fail" style="color: red;">Time is up! Try again.</div>', unsafe_allow_html=True)
 
         # Placeholder for the message
         message_placeholder = st.empty()
