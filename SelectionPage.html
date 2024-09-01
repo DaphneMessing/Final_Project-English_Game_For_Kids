@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -19,6 +19,22 @@
 
         .container {
             text-align: center;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 26px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        h2 {
+            font-size: 15px;
+            color: #555;
+            margin-bottom: 30px;
         }
 
         .tv-shows {
@@ -31,19 +47,23 @@
             background-color: #4CAF50;
             color: white;
             padding: 15px;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
+            font-size: 18px;
         }
 
         .tv-show:hover {
             background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Select Your Favorite TV Show</h1>
+        <h1>Learning English With My Favorite TV Show</h1>
+        <h2>Select Your Favorite TV Show</h2>
         <div class="tv-shows">
             <div class="tv-show" onclick="selectTVShow('Spongebob')">SpongeBob</div>
             <div class="tv-show" onclick="selectTVShow('PJ Masks')">PJ Masks</div>
@@ -65,13 +85,12 @@
         }
 
         function selectTVShow(showName) {
-            resetScores(); // Reset scores and stars when a new TV show is selected
+            resetScores(); 
             const capitalizedShowName = capitalizeWords(showName);
-            localStorage.setItem('selectedTVShow', capitalizedShowName); // Save the selected TV show to localStorage
-            localStorage.removeItem(`currentLevel`);// Set the initial player position to level 1
-            // Clear cached image URL
+            localStorage.setItem('selectedTVShow', capitalizedShowName);
+            localStorage.removeItem('currentLevel');
             localStorage.removeItem('cachedImage');
-            window.location.href = `http://localhost:8501/?tv_show=${encodeURIComponent(capitalizedShowName)}`;  // Redirect to Streamlit app
+            window.location.href = `http://localhost:8501/?tv_show=${encodeURIComponent(capitalizedShowName)}`; 
         }        
     </script>
 </body>

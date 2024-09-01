@@ -110,10 +110,6 @@
         .level15 { top: 105%; left: 60%; }
 
         .level16 { top: 87%; left: 47%; }
-        .level17 { top: 65%; left: 56%; }
-        .level18 { top: 43%; left: 42%; }
-        .level19 { top: 23%; left: 61%; }
-        .level20 { top: 8%; left: 50%; }
 
         .player {
             position: absolute;
@@ -178,18 +174,6 @@
         <div class="level level16" id="level16" onclick="submitLevel(16)">16
             <div class="stars" id="stars16"></div>
         </div>
-        <div class="level level17" id="level17" onclick="submitLevel(17)">17
-            <div class="stars" id="stars17"></div>
-        </div>
-        <div class="level level18" id="level18" onclick="submitLevel(18)">18
-            <div class="stars" id="stars18"></div>
-        </div>
-        <div class="level level19" id="level19" onclick="submitLevel(19)">19
-            <div class="stars" id="stars19"></div>
-        </div>
-        <div class="level level20" id="level20" onclick="submitLevel(20)">20
-            <div class="stars" id="stars20"></div>
-        </div>
         <!-- Player image -->
         <img id="player" class="player" alt="Player" />
 
@@ -217,14 +201,10 @@
             { top: '124%', left: '40%' },
             { top: '105%', left: '60%' },
 
-            { top: '87%', left: '47%' },
-            { top: '65%', left: '56%' },
-            { top: '43%', left: '42%' },
-            { top: '23%', left: '61%' },
-            { top: '8%', left: '50%' }
+            { top: '87%', left: '47%' }
         ];
 
-        const levelScores = Array(20).fill(0);
+        const levelScores = Array(16).fill(0);
 
         function getQueryParam(param) {
             const urlParams = new URLSearchParams(window.location.search);
@@ -232,7 +212,7 @@
         }
     
         function updateStarsFromUrl() {
-            for (let level = 1; level <= 20; level++) {
+            for (let level = 1; level <= 16; level++) {
                 const levelScore = getQueryParam(`level${level}_score`);
                 if (levelScore !== null) {
                     localStorage.setItem(`level${level}_score`, levelScore);
@@ -327,7 +307,7 @@
 
         function updateTotalScore() {
             let totalScore = 0;
-            for (let i = 1; i <= 20; i++) {
+            for (let i = 1; i <= 16; i++) {
                 const points = parseInt(localStorage.getItem(`level${i}_points`) || '0');
                 totalScore += points;
             }
@@ -335,7 +315,7 @@
         }
 
         function checkLevelAccessibility() {
-            for (let i = 2; i <= 20; i++) {
+            for (let i = 2; i <= 16; i++) {
                 const currentLevel = document.getElementById(`level${i}`);
                 const previousLevelScore = levelScores[i - 2];
 
@@ -402,7 +382,7 @@
             setPlayerPosition(lastLevel);
             console.log('Player position set to level:', lastLevel);
         
-            for (let i = 1; i <= 20; i++) {
+            for (let i = 1; i <= 16; i++) {
                 updateStars(i);
             }
         
