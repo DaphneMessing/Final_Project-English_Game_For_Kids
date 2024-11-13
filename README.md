@@ -41,7 +41,7 @@ This interactive game "Littel Talkers" helps children learn English through enga
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/english-learning-game.git
+   git clone https://github.com/DaphneMessing/Final_Project-English_Game_For_Kids.git
    ```
 2. Install the required Python libraries:
    ```bash
