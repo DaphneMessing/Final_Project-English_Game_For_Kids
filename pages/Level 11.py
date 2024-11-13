@@ -8,7 +8,7 @@ from streamlit_javascript import st_javascript
 import base64  
 import os  
 
-openai.api_key = 'sk-proj-SRGCSAzogrcsQIu2kwiZT3BlbkFJp02fsLG6iUdA7G5kEfKg'
+openai.api_key = 'your_openai_api_key'
 
 sentences = {
     "Spongebob": [

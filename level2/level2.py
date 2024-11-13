@@ -5,7 +5,7 @@ import numpy as np
 import scipy.io.wavfile as wav
 from streamlit_javascript import st_javascript
 
-openai.api_key = 'sk-proj-SRGCSAzogrcsQIu2kwiZT3BlbkFJp02fsLG6iUdA7G5kEfKg'
+openai.api_key = 'your_openai_api_key'
 
 # Define sentences for each TV show
 sentences = {

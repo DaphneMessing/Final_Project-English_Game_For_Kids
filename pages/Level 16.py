@@ -8,7 +8,7 @@ import numpy as np
 import scipy.io.wavfile as wav
 import openai
 
-openai.api_key = 'sk-proj-SRGCSAzogrcsQIu2kwiZT3BlbkFJp02fsLG6iUdA7G5kEfKg'
+openai.api_key = 'your_openai_api_key'
 
 # Sentences for speech recognition
 sentences_speech = {
