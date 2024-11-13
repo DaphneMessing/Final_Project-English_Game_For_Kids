@@ -47,7 +47,21 @@ This interactive game "Littel Talkers" helps children learn English through enga
    ```bash
    pip install streamlit sounddevice whisper Speechify
    ```
-3. Ensure the following folders and files exist in the project directory:
+3. Set up OpenAI API Key:
+   - Obtain your API key from OpenAI.
+   - Open the following files in "pages" subfolder:
+      - `Level 2.py`
+      - `Level 5.py`
+      - `Level 8.py`
+      - `Level 11.py`
+      - `Level 14.py`
+      - `Level 16.py`
+   - Add your OpenAI API key to the specified placeholder in these files:
+     ```bash
+     openai.api_key = "your_openai_api_key_here"
+     ```
+   - Save the changes.
+4. Ensure the following folders and files exist in the project directory:
     - `user_img/`: For storing user-generated avatars.
     - `HomePage/`: Background images for the TV shows.
     - `audio_levelX/`: Audio files for listening comprehension activities.
@@ -72,7 +86,7 @@ This interactive game "Littel Talkers" helps children learn English through enga
   - `img_generator.py`: Generates the player avatar.
   - `Level X.py`: Implements the logic for specific levels.
 - **HTML Files**:
-  - `SelectionPage.htm`l: TV show selection and image upload.
+  - `SelectionPage.html`: TV show selection and image upload.
   - `index.html`: Main game page with level navigation.
 - **Assets**:
   - `HomePage/`: Contains TV show background images.
