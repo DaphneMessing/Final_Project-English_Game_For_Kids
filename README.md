@@ -70,15 +70,22 @@ This interactive game "Littel Talkers" helps children learn English through enga
 
 ### How to Run
 
-1. Launch the game:
+1. Open the terminal and run the following command to start the image generation service:
    ```bash
-   streamlit run SelectionPage.html
+   streamlit run img_generator.py --client.showSidebarNavigation=false
    ```
-2. Follow the instructions:
-
-- Select a TV show and upload a close-up image.
-- Proceed to the home page to start playing the levels.
-3. Navigate through the levels, completing tasks and improving your English skills!
+2. In another terminal window, serve the selection page:
+   ```bash
+   python -m http.server 8000
+   ```
+3. Open your browser and navigate to:
+   ```bash
+   http://localhost:8000/SelectionPage.html
+   ```
+4.  Follow the instructions:
+   - Select a TV show and upload a close-up image.
+   - Proceed to the home page to start playing the levels.
+5. Navigate through the levels, completing tasks and improving your English skills!
 
 ### File Structure
 
